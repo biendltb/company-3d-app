@@ -57,6 +57,8 @@ namespace TIS_3dAntiCollision.Core
         public const int SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS = 3;
         public const int SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT = 3;
         public const int MERGE_LINE_DISTANCE = 10;
+        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 30;
+        public const int DEFAULT_VERTICAL_LINE_SCORE = 5;
 
     }
 }

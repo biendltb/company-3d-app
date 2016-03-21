@@ -37,8 +37,6 @@ namespace TIS_3dAntiCollision.Business
             init_prams();
 
             init_display();
-
-            //generateContent();
         }
 
         /// <summary>
@@ -74,11 +72,6 @@ namespace TIS_3dAntiCollision.Business
 
         public void DisplayContainerStack(Point3D[] stack_container_position, double container_length)
         {
-
-            // generate the default middle container stack
-            //byte[] container_map = new byte[8] {2, 4, 0, 1, 4, 5, 2, 6};
-            //createContainerStackRow(model_group, new Point3D(450, ConfigParameters.SENSOR_TO_GROUND_DISTANCE, 300), container_map);
-
             // add container stack to view
             foreach (Point3D point in stack_container_position)
                 model_group.Children.Add(getContainer(point, container_length, getContainerColor(point.Y)));
@@ -248,55 +241,7 @@ namespace TIS_3dAntiCollision.Business
             return geometry_model;
         }
 
-        // generate container stack row
-        private void createContainerStackRow(Model3DGroup model_group, Point3D start_point, byte[] container_map)
-        {
-            for (int i = 0; i < container_map.Length; i++)
-            {
-                if (container_map[i] >= 1)
-                {
-                    model_group.Children.Add(getContainer(new Point3D(start_point.X + i * (ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER),
-                                                                        start_point.Y - ConfigParameters.CONTAINER_HEIGHT * 0,
-                                                                        start_point.Z), ConfigParameters.FORTY_FEET_CONTAINER_LENGTH, Colors.Green));
-                }
-
-                if (container_map[i] >= 2)
-                {
-                    model_group.Children.Add(getContainer(new Point3D(start_point.X + i * (ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER),
-                                                                        start_point.Y - ConfigParameters.CONTAINER_HEIGHT * 1,
-                                                                        start_point.Z), ConfigParameters.FORTY_FEET_CONTAINER_LENGTH, Colors.SteelBlue));
-                }
-
-                if (container_map[i] >= 3)
-                {
-                    model_group.Children.Add(getContainer(new Point3D(start_point.X + i * (ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER),
-                                                                        start_point.Y - ConfigParameters.CONTAINER_HEIGHT * 2,
-                                                                        start_point.Z), ConfigParameters.FORTY_FEET_CONTAINER_LENGTH, Colors.Tomato));
-                }
-
-                if (container_map[i] >= 4)
-                {
-                    model_group.Children.Add(getContainer(new Point3D(start_point.X + i * (ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER),
-                                                                        start_point.Y - ConfigParameters.CONTAINER_HEIGHT * 3,
-                                                                        start_point.Z), ConfigParameters.FORTY_FEET_CONTAINER_LENGTH, Colors.PaleGoldenrod));
-                }
-
-                if (container_map[i] >= 5)
-                {
-                    model_group.Children.Add(getContainer(new Point3D(start_point.X + i * (ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER),
-                                                                        start_point.Y - ConfigParameters.CONTAINER_HEIGHT * 4,
-                                                                        start_point.Z), ConfigParameters.FORTY_FEET_CONTAINER_LENGTH, Colors.Yellow));
-                }
-
-                if (container_map[i] >= 6)
-                {
-                    model_group.Children.Add(getContainer(new Point3D(start_point.X + i * (ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER),
-                                                                        start_point.Y - ConfigParameters.CONTAINER_HEIGHT * 5,
-                                                                        start_point.Z), ConfigParameters.FORTY_FEET_CONTAINER_LENGTH, Colors.Red));
-                }
-            }
-        }
-
+        // get the color of container based on its height level
         private Color getContainerColor(double y_pos)
         {
             byte level = (byte)Math.Round(Math.Abs(ConfigParameters.SENSOR_TO_GROUND_DISTANCE - y_pos) / ConfigParameters.CONTAINER_HEIGHT);

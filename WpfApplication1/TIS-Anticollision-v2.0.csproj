@@ -59,7 +59,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Business\ContainerStackProfiler.cs" />
-    <Compile Include="Business\ContainerStackProfiler2.cs" />
     <Compile Include="Business\ScanController.cs" />
     <Compile Include="Business\SingleScanEncoder.cs" />
     <Compile Include="Business\ViewPortMouseActivity.cs" />

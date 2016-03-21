@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-D:\Projects\C Sharp Projects\TIS-AntiCollision-v2.0(WPF)\WpfApplication1\obj\x86\Debug\
+D:\Projects\CSharp\TIS-AntiCollision-v2.0-WPF\WpfApplication1\obj\x86\Debug\
 TIS_3dAntiCollision
 none
 false
 DEBUG;TRACE
-D:\Projects\C Sharp Projects\TIS-AntiCollision-v2.0(WPF)\WpfApplication1\App.xaml
+D:\Projects\CSharp\TIS-AntiCollision-v2.0-WPF\WpfApplication1\App.xaml
 3-249272505
 
-45-1046993395
+44-2124178515
 15-826746438
 UI\MainWindow.xaml;UI\MoveTo.xaml;UI\Scan.xaml;
 

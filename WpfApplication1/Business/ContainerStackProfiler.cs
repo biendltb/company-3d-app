@@ -12,7 +12,8 @@ namespace TIS_3dAntiCollision.Business
     {
         private Point3D[] point_data;
 
-        private KeyValuePair<double, int> base_container_stack_point;
+        private KeyValuePair<double, int> base_container_stack_point = new KeyValuePair<double, int>(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
+                                                                                                        ConfigParameters.DEFAULT_VERTICAL_LINE_SCORE);
 
         // save x position and height of each middle column
         List<KeyValuePair<double, double>> list_x_pos_height = new List<KeyValuePair<double, double>>();
@@ -20,7 +21,6 @@ namespace TIS_3dAntiCollision.Business
         public ContainerStackProfiler(Point3D[] point_data)
         {
             this.point_data = cropData(point_data);
-
         }
 
         /// <summary>
@@ -76,7 +76,8 @@ namespace TIS_3dAntiCollision.Business
                     double start_container_range = top_line.Key - (int)(top_line.Key / container_column_width) * container_column_width;
 
                     // set the base container stack point
-                    base_container_stack_point = new KeyValuePair<double, int>(start_container_range, top_line.Value);
+                    if (top_line.Value > base_container_stack_point.Value)
+                        base_container_stack_point = new KeyValuePair<double, int>(start_container_range, top_line.Value);
 
                     double start_column_x = start_container_range;
 
@@ -123,7 +124,7 @@ namespace TIS_3dAntiCollision.Business
 
             // filter to get all point in the overlap range
             foreach (Point3D point in point_data)
-                if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.FORTY_FEET_CONTAINER_LENGTH / 2)
+                if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH)
                     list_point_in_container_overlap_range.Add(point);
 
             // calculate the average height of every section
@@ -276,69 +277,6 @@ namespace TIS_3dAntiCollision.Business
         }
 
         /// <summary>
-        /// Get the line contain most number of points
-        /// </summary>
-        /// <param name="points"></param>
-        /// <returns>Return the top frequency and the value according to</returns>
-        private KeyValuePair<double, int> getStrongestVerticalLine(Point3D[] points)
-        {
-            // extract to X array and Y array
-            double[] x_arr = new double[points.Length];
-            double[] y_arr = new double[points.Length];
-
-            List<double> list_line = new List<double>();
-            List<int> list_frequency = new List<int>();
-
-            double[] line_arr;
-            int[] frequency_arr;
-
-            // extract
-            for (int i = 0; i < points.Length; i++)
-            {
-                x_arr[i] = points[i].X;
-                y_arr[i] = points[i].Y;
-            }
-
-            // sort point following x
-            Array.Sort(x_arr, y_arr);
-
-            // round value to thickness and count number of point on that round
-            list_line.Add(0);
-            list_frequency.Add(0);
-            for (int i = 0; i < x_arr.Length; i++)
-            {
-                double rounded_num = Math.Round(x_arr[i] / ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS) *
-                                        ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS;
-                if (list_line[list_line.Count - 1] == rounded_num)
-                    list_frequency[list_frequency.Count - 1]++;
-                else
-                {
-                    list_line.Add(rounded_num);
-                    list_frequency.Add(1);
-                }
-            }
-
-            // filter the line that not meet the limited threshold
-            for (int i = 0; i < list_frequency.Count; i++)
-                if (list_frequency[i] < ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT)
-                {
-                    list_frequency.RemoveAt(i);
-                    list_line.RemoveAt(i);
-                    i--;
-                }
-
-            line_arr = list_line.ToArray();
-            frequency_arr = list_frequency.ToArray();
-
-            Array.Sort(frequency_arr, line_arr);
-
-            if (line_arr.Length == 0)
-                return new KeyValuePair<double, int>(-1, -1);
-
-            return (new KeyValuePair<double, int>(line_arr[line_arr.Length - 1], frequency_arr[frequency_arr.Length - 1]));
-        }
-
-        /// <summary>
         /// Get all the lines which contains points exceed the threshold
         /// The default is get the vertical line
         /// </summary>
@@ -360,7 +298,6 @@ namespace TIS_3dAntiCollision.Business
             Array.Sort(x_arr, y_arr);
 
             // round point value based on the thickness and count how many point on the line
-            // round value to thickness and count number of point on that round
             list_line.Add(0);
             list_frequency.Add(0);
             for (int i = 0; i < x_arr.Length; i++)
@@ -384,7 +321,9 @@ namespace TIS_3dAntiCollision.Business
                     i--;
                 }
 
-            // if there is any line satisfying the condition, process to get result
+            // collecting all line that meet the threshold
+            // clustering line based on width or height params
+            // merging every line with its nearby lines
             if (list_line.Count > 0)
             {
                 line_arr = list_line.ToArray();
