@@ -285,5 +285,22 @@ namespace TIS_3dAntiCollision.UI
             vpm.Camera.Position = ViewPortMouseActivity.ZoomViewPort(e.Delta, vpm.Camera.Position);
             Console.WriteLine(e.Delta);
         }
+
+        private void m_viewPort_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewPortMouseActivity.SetStartDragPoint(e.GetPosition(null));
+        }
+
+        private void m_viewPort_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point3D new_camera_position = new Point3D(vpm.Camera.Position.X, vpm.Camera.Position.Y, vpm.Camera.Position.Z);
+                Vector3D new_camera_look_direction = new Vector3D(vpm.Camera.LookDirection.X, vpm.Camera.LookDirection.Y, vpm.Camera.LookDirection.Z);
+                ViewPortMouseActivity.RotateViewPort(e.GetPosition(null), ref new_camera_position, ref new_camera_look_direction);
+                vpm.Camera.Position = new_camera_position;
+                vpm.Camera.LookDirection = new_camera_look_direction;
+            }
+        }
     }
 }

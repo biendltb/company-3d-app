@@ -51,10 +51,12 @@
                 <ColumnDefinition Width="866"/>
                 <ColumnDefinition Width="500*"/>
             </Grid.ColumnDefinitions>
-            <Rectangle Grid.Row="0" Grid.Column="0" Fill="Black" />
-            <Viewport3D x:Name="m_viewPort" Grid.Row="0" Grid.Column="0" MouseWheel="m_viewPort_MouseWheel">
+            <Grid Grid.Row="0" Grid.Column="0" MouseWheel="m_viewPort_MouseWheel" PreviewMouseLeftButtonDown="m_viewPort_PreviewMouseLeftButtonDown" PreviewMouseMove="m_viewPort_PreviewMouseMove">
+                <Rectangle Grid.Row="0" Grid.Column="0" Fill="Black" />
+                <Viewport3D x:Name="m_viewPort" Grid.Row="0" Grid.Column="0" >
                 
-            </Viewport3D>
+                </Viewport3D>
+            </Grid>
             <GroupBox Grid.Column="1" 
                       Header="" 
                       Height="100" 

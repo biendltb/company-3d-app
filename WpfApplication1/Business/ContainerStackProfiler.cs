@@ -124,7 +124,7 @@ namespace TIS_3dAntiCollision.Business
 
             // filter to get all point in the overlap range
             foreach (Point3D point in point_data)
-                if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH)
+                if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2)
                     list_point_in_container_overlap_range.Add(point);
 
             // calculate the average height of every section
