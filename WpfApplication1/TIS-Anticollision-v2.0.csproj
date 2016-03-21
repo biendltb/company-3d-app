@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{98867CB6-B86E-4913-BBA0-A98B417F315A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TIS_3dAntiCollision</RootNamespace>
+    <AssemblyName>WpfApplication1</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Business\ContainerStackProfiler.cs" />
+    <Compile Include="Business\ContainerStackProfiler2.cs" />
+    <Compile Include="Business\ScanController.cs" />
+    <Compile Include="Business\SingleScanEncoder.cs" />
+    <Compile Include="Business\ViewPortMouseActivity.cs" />
+    <Compile Include="Services\DataStorageManager.cs" />
+    <Compile Include="Services\ScanDataEncoder.cs" />
+    <Compile Include="Services\Validator .cs" />
+    <Compile Include="UI\DataRepresentChart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DataRepresentChart.Designer.cs">
+      <DependentUpon>DataRepresentChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MoveTo.xaml.cs">
+      <DependentUpon>MoveTo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Scan.xaml.cs">
+      <DependentUpon>Scan.xaml</DependentUpon>
+    </Compile>
+    <Page Include="UI\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Business\DisplayUpdater.cs" />
+    <Compile Include="Business\MovementController.cs" />
+    <Compile Include="Business\PlcManager.cs" />
+    <Compile Include="Business\SensorManger.cs" />
+    <Compile Include="Services\SensorOutputParser.cs" />
+    <Compile Include="Business\ViewPortManager.cs" />
+    <Compile Include="Core\ConfigFileManager.cs" />
+    <Compile Include="Core\Conversion.cs" />
+    <Compile Include="Core\DataTypes.cs" />
+    <Compile Include="Core\FormContentManager.cs" />
+    <Compile Include="Core\IniPaser.cs" />
+    <Compile Include="Core\ConfigParameters.cs" />
+    <Compile Include="Core\PLC.cs" />
+    <Compile Include="Core\PlcTypes\Boolean.cs" />
+    <Compile Include="Core\PlcTypes\Byte.cs" />
+    <Compile Include="Core\PlcTypes\ByteArray.cs" />
+    <Compile Include="Core\PlcTypes\Counter.cs" />
+    <Compile Include="Core\PlcTypes\CPU.cs" />
+    <Compile Include="Core\PlcTypes\DInt.cs" />
+    <Compile Include="Core\PlcTypes\Double.cs" />
+    <Compile Include="Core\PlcTypes\DWord.cs" />
+    <Compile Include="Core\PlcTypes\Int.cs" />
+    <Compile Include="Core\PlcTypes\String.cs" />
+    <Compile Include="Core\PlcTypes\Struct.cs" />
+    <Compile Include="Core\PlcTypes\Timer.cs" />
+    <Compile Include="Core\PlcTypes\Word.cs" />
+    <Compile Include="Core\SensorConnection.cs" />
+    <Compile Include="Display\Container3dDataGenerator.cs" />
+    <Compile Include="UI\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="UI\MoveTo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Scan.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\DataRepresentChart.resx">
+      <DependentUpon>DataRepresentChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\move_to.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\plc_connect.png" />
+    <Resource Include="images\plc_disconnect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\sensor_connect.png" />
+    <Resource Include="images\sensor_disconnect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\scan_active.png" />
+    <Resource Include="images\scan_deactive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\chart.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

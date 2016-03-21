@@ -1,0 +1,107 @@
+﻿<Window x:Class="TIS_3dAntiCollision.UI.Scan"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Scan" Height="350" Width="400">
+    <Grid>
+        <StackPanel>
+            <GroupBox Header="" Height="250" HorizontalAlignment="Center" Name="groupBox1" VerticalAlignment="Top" Width="350">
+                <Grid Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30*"/>
+                    </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Label Content="From"
+                           VerticalAlignment="Center"/>
+                    <TextBox x:Name="tb_start_x"
+                             VerticalAlignment="Center"
+                             Width="100"
+                             Margin="10,0,0,0"/>
+                    <Label Content="To"
+                           VerticalAlignment="Center"
+                           Margin="10,0,0,0"/>
+                    <TextBox x:Name="tb_stop_x"
+                             VerticalAlignment="Center"
+                             Width="100"
+                             Margin="10,0,0,0"/>
+                </StackPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="200*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <Label
+                               HorizontalAlignment="Stretch"
+                               Margin="0, 20, 5, 5"
+                               VerticalAlignment="Top"
+                               Content="Speed" />
+                            <Label
+                               HorizontalAlignment="Stretch"
+                               Margin="0, 20, 5, 5"
+                               VerticalAlignment="Top"
+                               Content="Step length" />
+                            <Label
+                               HorizontalAlignment="Stretch"
+                               Margin="0, 20, 5, 5"
+                               VerticalAlignment="Top"
+                               Content="Plane angle" />
+
+                            <Label
+                               HorizontalAlignment="Stretch"
+                               Margin="0, 20, 5, 5"
+                               VerticalAlignment="Top"
+                               Content="Data file name" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBox x:Name="tb_speed"
+                             Margin="5,20,5,5"
+                             Height="20"
+                             Width="185"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"/>
+                            <TextBox x:Name="tb_step_length"
+                             Margin="5,25,5,5"
+                             Height="20"
+                             Width="185"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"/>
+                            <TextBox x:Name="tb_plane_angle"
+                             Margin="5,25,5,5"
+                             Height="20"
+                             Width="185"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"/>
+                            <TextBox x:Name="tb_data_file_name"
+                             Margin="5,25,5,5"
+                             Height="20"
+                             Width="185"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"/>
+                        </StackPanel>
+                    </Grid>
+                
+                </Grid>
+            </GroupBox>
+            <Grid Height="60">
+                <Button Content="Scan"
+                        Height="23" 
+                        Name="scan_btn"
+                        Width="75"
+                        Margin="40,5,5,5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Click="scan_btn_Click"/>
+                <Button Content="Cancel" 
+                        Height="23" 
+                        Name="cancel_btn"
+                        Width="75"
+                        Margin="5,5,40,5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Click="cancel_btn_Click"/>
+
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
