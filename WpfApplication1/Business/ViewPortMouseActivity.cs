@@ -39,48 +39,69 @@ namespace TIS_3dAntiCollision.Business
 
         public static void RotateViewPort(Point new_mouse_pos, ref Point3D camera_pos, ref Vector3D camera_look_direction)
         {
-            // change rate
-            double t = 1;
+            double rotate_angle_unit_rad = 0.1 * Math.PI / 180;
             Point3D new_cam_pos = new Point3D(camera_pos.X, camera_pos.Y, camera_pos.Z);
 
-            // calculate the radius of sphere
-            // R^2 = (x - a)^2 + (y - b)^2 + (z - c)^2
-            double radius = Math.Sqrt((camera_pos.X - viewport_center_point.X) * (camera_pos.X - viewport_center_point.X)
-                + (camera_pos.Y - viewport_center_point.Y) * (camera_pos.Y - viewport_center_point.Y)
-                + (camera_pos.Z - viewport_center_point.Z) * (camera_pos.Z - viewport_center_point.Z));
-
-            // MAKE THE CAMERA POSITION MOVE UP/DOWN (Y invert)
-            double y_diff = mouse_start_drag_position.Y - new_mouse_pos.Y;
-            if (y_diff != 0)
-            {
-                // z = R^2 - (x - a)^2 - (y - b)^2
-                double new_cam_pos_x = new_cam_pos.X;
-                double new_cam_pos_y = new_cam_pos.Y + y_diff * t;
-                double new_cam_pos_z = Math.Sqrt(Math.Abs(radius * radius
-                    - (new_cam_pos_x - viewport_center_point.X) * (new_cam_pos_x - viewport_center_point.X)
-                    - (new_cam_pos_y - viewport_center_point.Y) * (new_cam_pos_y - viewport_center_point.Y)))
-                    + viewport_center_point.Z;
-
-                new_cam_pos = new Point3D(new_cam_pos_x, new_cam_pos_y, new_cam_pos_z);
-            }
-            
-            // MAKE THE CAMERA POSITION MOVE LEFT/RIGHT
+            // MAKE THE CAMERA POSITION MOVE LEFT/RIGHT (ROTATE AROUND AXIS Y)
             double x_diff = new_mouse_pos.X - mouse_start_drag_position.X;
             if (x_diff != 0)
             {
-                double new_cam_pos_x = new_cam_pos.X + x_diff * t;
+                double y_rotate_angle_rad = -1 * x_diff * rotate_angle_unit_rad;
+                // y not change
                 double new_cam_pos_y = new_cam_pos.Y;
-                double new_cam_pos_z = Math.Sqrt(Math.Abs(radius * radius
-                    - (new_cam_pos_x - viewport_center_point.X) * (new_cam_pos_x - viewport_center_point.X)
-                    - (new_cam_pos_y - viewport_center_point.Y) * (new_cam_pos_y - viewport_center_point.Y)))
-                    + viewport_center_point.Z;
+                
+                // move the axis to view port center point
+                double x_tmp = new_cam_pos.X - viewport_center_point.X;
+                double z_tmp = new_cam_pos.Z - viewport_center_point.Z;
+
+                double new_cam_pos_x = x_tmp * Math.Cos(y_rotate_angle_rad) - z_tmp * Math.Sin(y_rotate_angle_rad) + viewport_center_point.X;
+                double new_cam_pos_z = x_tmp * Math.Sin(y_rotate_angle_rad) + z_tmp * Math.Cos(y_rotate_angle_rad) + viewport_center_point.Z;
 
                 new_cam_pos = new Point3D(new_cam_pos_x, new_cam_pos_y, new_cam_pos_z);
-            }
-            
 
-            if (x_diff != 0 && y_diff != 0)
+                camera_pos = new_cam_pos;
+                camera_look_direction = new Vector3D(viewport_center_point.X - camera_pos.X,
+                    viewport_center_point.Y - camera_pos.Y,
+                    viewport_center_point.Z - camera_pos.Z);
+            }
+
+            // MAKE THE CAMERA POSITION MOVE UP/DOWN 
+            double y_diff = mouse_start_drag_position.Y - new_mouse_pos.Y;
+            if (y_diff != 0)
             {
+                double rotate_angle_rad = y_diff * rotate_angle_unit_rad;
+
+                // move the axis to view port center point
+                double x_tmp = new_cam_pos.X - viewport_center_point.X;
+                double y_tmp = new_cam_pos.Y - viewport_center_point.Y;
+                double z_tmp = new_cam_pos.Z - viewport_center_point.Z;
+
+                // angle to x axis
+                double rotate_x_plane_angle_rad = Math.Atan(z_tmp / x_tmp);
+                if ((x_tmp < 0 && z_tmp > 0) || (x_tmp < 0 && z_tmp < 0))
+                    rotate_x_plane_angle_rad += Math.PI;
+
+                rotate_x_plane_angle_rad *= -1;
+                
+                // reflect camera position to x plane (rotate around y)
+                double new_cam_pos_x_1 = x_tmp * Math.Cos(rotate_x_plane_angle_rad) - z_tmp * Math.Sin(rotate_x_plane_angle_rad);
+                double new_cam_pos_y_1 = y_tmp;
+                double new_cam_pos_z_1 = x_tmp * Math.Sin(rotate_x_plane_angle_rad) + z_tmp * Math.Cos(rotate_x_plane_angle_rad);
+
+                // rotate around z
+                double new_cam_pos_x_2 = new_cam_pos_x_1 * Math.Cos(rotate_angle_rad) - new_cam_pos_y_1 * Math.Sin(rotate_angle_rad);
+                double new_cam_pos_y_2 = new_cam_pos_x_1 * Math.Sin(rotate_angle_rad) + new_cam_pos_y_1 * Math.Cos(rotate_angle_rad);
+                double new_cam_pos_z_2 = new_cam_pos_z_1;
+
+                // rotate back to the initial plane (rotate around y with invert direction)
+                rotate_x_plane_angle_rad *= -1;
+
+                double new_cam_pos_x_3 = new_cam_pos_x_2 * Math.Cos(rotate_x_plane_angle_rad) - new_cam_pos_z_2 * Math.Sin(rotate_x_plane_angle_rad) + viewport_center_point.X;
+                double new_cam_pos_y_3 = new_cam_pos_y_2 + viewport_center_point.Y;
+                double new_cam_pos_z_3 = new_cam_pos_x_2 * Math.Sin(rotate_x_plane_angle_rad) + new_cam_pos_z_2 * Math.Cos(rotate_x_plane_angle_rad) + viewport_center_point.Z;
+
+                new_cam_pos = new Point3D(new_cam_pos_x_3, new_cam_pos_y_3, new_cam_pos_z_3);
+
                 camera_pos = new_cam_pos;
                 camera_look_direction = new Vector3D(viewport_center_point.X - camera_pos.X,
                     viewport_center_point.Y - camera_pos.Y,
@@ -91,7 +112,6 @@ namespace TIS_3dAntiCollision.Business
             Console.WriteLine("Start Mouse Pos: " + mouse_start_drag_position.ToString());
             Console.WriteLine("New Cam Pos: " + camera_pos.ToString());
             Console.WriteLine("New Look Direction: " + camera_look_direction.ToString());
-
 
             // update mouse start pos
             mouse_start_drag_position = new_mouse_pos;
