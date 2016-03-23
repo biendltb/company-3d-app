@@ -2,23 +2,65 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" 
-        WindowState="Maximized">
-    
+        WindowState="Maximized"
+        Height="{Binding SystemParameters.PrimaryScreenHeight}" 
+        Width="{Binding SystemParameters.PrimaryScreenWidth}">
+    <Window.Resources>
+        <!-- Flat Button Style -->
+        <Color x:Key="DefaultColor" A="255" R="240" G ="240" B="240"/>
+        <Color x:Key="HighlightColor" A="255" R="229" G ="229" B="229"/>
+        <Color x:Key="PressedColor" A="255" R="215" G ="215" B="215"/>
+
+        <SolidColorBrush x:Key="DefaultBrush" Color="{StaticResource DefaultColor}" />
+        <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}" />
+        <SolidColorBrush x:Key="PressedBrush" Color="{StaticResource PressedColor}" />
+
+        <Style TargetType="Button" x:Key="FlatButtonStyle">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Background" Value="{StaticResource DefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Background="{TemplateBinding Background}"
+                    Padding="{TemplateBinding Padding}"
+                    CornerRadius="0">
+                            <ContentControl Content="{TemplateBinding Content}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PressedBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!-- End Flat Button Style -->
+    </Window.Resources>
+
     <!--Main grid with 1 column and 3 rows-->
-    
-    <Grid x:Name="mainGrid" Width="1366"
-            Height="768">
+
+    <Grid x:Name="mainGrid" Width="{Binding SystemParameters.PrimaryScreenHeight}"
+            Height="{Binding SystemParameters.PrimaryScreenWidth}"
+          Background="LightGray">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100*" />
-            <RowDefinition Height="568*" />
-            <RowDefinition Height="100*" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="80*" />
+            <RowDefinition Height="20*" />
         </Grid.RowDefinitions>
         
         <!--First row: Grid contain Menu and button-->
         <Grid x:Name="headerGrid" Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="25" />
-                <RowDefinition Height="75" />
+                <RowDefinition Height="25*" />
+                <RowDefinition Height="75*" />
             </Grid.RowDefinitions>
             <!--Menu strip-->
             <Menu IsMainMenu="True" Grid.Row="0" Grid.Column="0">
@@ -35,57 +77,107 @@
             <!--First column contains the buttons and second one contains the logo-->
             <Grid x:Name="buttonStripGrid" Grid.Row="1" Grid.Column="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1200" />
+                    <ColumnDefinition Width="100*" />
                     <ColumnDefinition Width="166" />
                 </Grid.ColumnDefinitions>
                 
                 <!--Cell contains button in difference columns-->
                 <StackPanel x:Name="buttonArea" HorizontalAlignment="Left" Orientation="Horizontal"/>
-                <Image Grid.Row="0" Grid.Column="1" Name="logo" Source="pack://application:,,,/images/logo.png" />
+                <Grid Grid.Row="0" Grid.Column="1" Height="50"  Background="White">
+                    <Image Name="logo" Source="pack://application:,,,/images/logo.png"/>
+                </Grid>
+                
             </Grid>
         </Grid>
         
-        <!--Second row: display graph and value of parameters-->
+        <!--Second row: display 3d view port and value of parameters-->
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="866"/>
-                <ColumnDefinition Width="500*"/>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="40*"/>
             </Grid.ColumnDefinitions>
+            <!--VIEW PORT DISPLAY-->
             <Grid Grid.Row="0" Grid.Column="0" MouseWheel="m_viewPort_MouseWheel" PreviewMouseLeftButtonDown="m_viewPort_PreviewMouseLeftButtonDown" PreviewMouseMove="m_viewPort_PreviewMouseMove">
                 <Rectangle Grid.Row="0" Grid.Column="0" Fill="Black" />
                 <Viewport3D x:Name="m_viewPort" Grid.Row="0" Grid.Column="0" >
                 
                 </Viewport3D>
+                <GridSplitter Width="5" VerticalAlignment="Stretch"
+                              ResizeDirection ="Columns"
+                              ShowsPreview="False"
+                              Grid.Column="1" />
             </Grid>
-            <GroupBox Grid.Column="1" 
-                      Header="" 
-                      Height="100" 
-                      HorizontalAlignment="Left" 
-                      Margin="5,0,0,0" 
-                      Name="groupBox1" 
-                      VerticalAlignment="Top" 
-                      Width="250">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="150" />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0"
-                           HorizontalAlignment="Stretch"
-                           Margin="5, 5, 5, 5"
-                           VerticalAlignment="Top"
-                           Content="X Position" />
-                    <TextBox Grid.Column="1"
-                             x:Name="tb_x_pos"
-                             IsEnabled="False"
-                             VerticalAlignment="Top"
-                             Margin="5, 5, 5, 5"
-                             Height="20"
-                             Width="100"
-                             Text="0" />
-                </Grid>
+            <!--DATA INFORMATION DISPLAY-->
+            <Grid  Grid.Column="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="50*"/>
+                </Grid.ColumnDefinitions>
+                <!--FIRST COLUMN STACK PANEL-->
+                <StackPanel Grid.Column="0" HorizontalAlignment="Stretch" Orientation="Vertical">
+                    <!--SPREADER POSITION -->
+                    <GroupBox
+                          Header="Spreader position"
+                          HorizontalAlignment="Stretch" 
+                          Margin="5,0,10,0" 
+                          Name="groupBox1"
+                          VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Stretch" Orientation="Vertical">
+                            <Label 
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 10, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="X Position" />
+                            <Label Grid.Column="0"
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 5, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Y Position" />
+                            
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Stretch" Orientation="Vertical">
+                            <TextBox 
+                                     x:Name="tb_x_pos"
+                                     IsEnabled="False"
+                                     VerticalAlignment="Top"
+                                     Margin="5, 10, 5, 5"
+                                     Height="20"
+                                     Text="0" />
+                            <TextBox 
+                                     x:Name="tb_y_pos"
+                                     IsEnabled="False"
+                                     VerticalAlignment="Top"
+                                     Margin="5, 10, 5, 5"
+                                     Height="20"
+                                     Text="0" />
+                        </StackPanel>
+                    </Grid>
                 
-            </GroupBox>
+                </GroupBox>
+                </StackPanel>
+                <!--SECOND COLUMN STACK PANEL-->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Stretch" Orientation="Vertical">
+                    <GroupBox 
+                          Header="Collision Prevention State"
+                          HorizontalAlignment="Stretch" 
+                          Margin="5,0,10,0" 
+                          Name="groupBox2"
+                          VerticalAlignment="Top">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="90*"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                        
+                    </GroupBox>
+                </StackPanel>
+            </Grid>
         </Grid>
         <Grid Grid.Row="2">
             <RichTextBox x:Name="rtb_log">

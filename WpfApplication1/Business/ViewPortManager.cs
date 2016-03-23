@@ -21,9 +21,9 @@ namespace TIS_3dAntiCollision.Business
         private const double camera_far_plane_distance = 10000;
         private const double camera_near_plane_distance = 300;
         private const double camera_horizontal_field_of_view = 90;
-        private Point3D camera_position = new Point3D(0, 500, 500);
+        private Point3D camera_position = new Point3D(150, 250, 1050);
         // calculate based on the view port center point
-        private Vector3D camera_look_direction = new Vector3D(735, 780, -500);
+        private Vector3D camera_look_direction = new Vector3D(600, 1000, -1050);
         private Vector3D camera_up_direction = new Vector3D(0, -1, 0);
 
         // LIGHT PARAMS

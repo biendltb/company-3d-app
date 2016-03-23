@@ -108,10 +108,10 @@ namespace TIS_3dAntiCollision.Business
                     viewport_center_point.Z - camera_pos.Z);
             }
 
-            Console.WriteLine("New Mouse Pos: " + new_mouse_pos.ToString());
-            Console.WriteLine("Start Mouse Pos: " + mouse_start_drag_position.ToString());
-            Console.WriteLine("New Cam Pos: " + camera_pos.ToString());
-            Console.WriteLine("New Look Direction: " + camera_look_direction.ToString());
+            //Console.WriteLine("New Mouse Pos: " + new_mouse_pos.ToString());
+            //Console.WriteLine("Start Mouse Pos: " + mouse_start_drag_position.ToString());
+            //Console.WriteLine("New Cam Pos: " + camera_pos.ToString());
+            //Console.WriteLine("New Look Direction: " + camera_look_direction.ToString());
 
             // update mouse start pos
             mouse_start_drag_position = new_mouse_pos;

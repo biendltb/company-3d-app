@@ -43,7 +43,6 @@ namespace TIS_3dAntiCollision.UI
 
             vpm = new ViewPortManager(m_viewPort);
 
-            //initContainerStack();
         }
 
         private void init()
@@ -174,77 +173,6 @@ namespace TIS_3dAntiCollision.UI
         {
             tb_x_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.X_post, 2).ToString();
         }
-        
-        private void initContainerStack()
-        {
-            DirectionalLight DirLight1 = new DirectionalLight();
-            DirLight1.Color = Colors.White;
-            DirLight1.Direction = new Vector3D(1, -1, 1);
-
-            PerspectiveCamera Camera1 = new PerspectiveCamera();
-            Camera1.FarPlaneDistance = 30;
-            Camera1.NearPlaneDistance = 1;
-            Camera1.FieldOfView = 60;
-            Camera1.Position = new Point3D(-10, 10, -10);
-            Camera1.LookDirection = new Vector3D(1, -1, 1);
-            Camera1.UpDirection = new Vector3D(0, 1, 0);
-
-            Model3DGroup modelGroup = new Model3DGroup();
-            modelGroup.Children.Add(drawContainer(new Point3D(0, 0, 0), Colors.Green));
-            modelGroup.Children.Add(drawContainer(new Point3D(1, 0, 0), Colors.Green));
-            modelGroup.Children.Add(drawContainer(new Point3D(2, 0, 0), Colors.Green));
-            modelGroup.Children.Add(drawContainer(new Point3D(3, 0, 0), Colors.Green));
-            modelGroup.Children.Add(drawContainer(new Point3D(0, 1, 0), Colors.Blue));
-            //modelGroup.Children.Add(drawContainer(new Point3D(1, 1, 0), Colors.Blue));
-            modelGroup.Children.Add(drawContainer(new Point3D(2, 1, 0), Colors.Blue));
-            //modelGroup.Children.Add(drawContainer(new Point3D(3, 1, 0), Colors.Blue));
-            modelGroup.Children.Add(drawContainer(new Point3D(0, 2, 0), Colors.Yellow));
-            //modelGroup.Children.Add(drawContainer(new Point3D(1, 2, 0), Colors.Yellow));
-            modelGroup.Children.Add(drawContainer(new Point3D(2, 2, 0), Colors.Yellow));
-            //modelGroup.Children.Add(drawContainer(new Point3D(3, 2, 0), Colors.Yellow));
-            modelGroup.Children.Add(drawContainer(new Point3D(0, 3, 0), Colors.Red));
-            //modelGroup.Children.Add(drawContainer(new Point3D(1, 3, 0), Colors.Red));
-            //modelGroup.Children.Add(drawContainer(new Point3D(2, 3, 0), Colors.Red));
-            //modelGroup.Children.Add(drawContainer(new Point3D(3, 3, 0), Colors.Red));
-
-            modelGroup.Children.Add(DirLight1);
-            ModelVisual3D modelsVisual = new ModelVisual3D();
-            modelsVisual.Content = modelGroup;
-
-            m_viewPort.Camera = Camera1;
-            m_viewPort.Children.Add(modelsVisual);
-
-            // rotate
-            //AxisAngleRotation3D axis = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0);
-            //RotateTransform3D Rotate = new RotateTransform3D(axis);
-            //Cube1.Transform = Rotate;
-            //Cube2.Transform = Rotate;
-            //Cube3.Transform = Rotate;
-            //Cube4.Transform = Rotate;
-            //DoubleAnimation RotAngle = new DoubleAnimation();
-            //RotAngle.From = 0;
-            //RotAngle.To = 360;
-            //RotAngle.Duration = new Duration(TimeSpan.FromSeconds(20.0));
-            //RotAngle.RepeatBehavior = RepeatBehavior.Forever;
-            //NameScope.SetNameScope(m_viewPort, new NameScope());
-            //m_viewPort.RegisterName("cubeaxis", axis);
-            //Storyboard.SetTargetName(RotAngle, "cubeaxis");
-            //Storyboard.SetTargetProperty(RotAngle, new PropertyPath(AxisAngleRotation3D.AngleProperty));
-            //Storyboard RotCube = new Storyboard();
-            //RotCube.Children.Add(RotAngle);
-            //RotCube.Begin(m_viewPort);
-        }
-
-        private GeometryModel3D drawContainer(Point3D pos, Color color)
-        {
-            GeometryModel3D Cube1 = new GeometryModel3D();
-            Container3dDataGenerator cdg = new Container3dDataGenerator(pos, Core.ContainerTypes.TwentyFeet);
-            MeshGeometry3D cubeMesh = cdg.CreateContainer();
-            Cube1.Geometry = cubeMesh;
-            Cube1.Material = new DiffuseMaterial(new SolidColorBrush(color));
-
-            return Cube1;
-        }
 
         // add for testing purpose
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -283,7 +211,7 @@ namespace TIS_3dAntiCollision.UI
         private void m_viewPort_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             vpm.Camera.Position = ViewPortMouseActivity.ZoomViewPort(e.Delta, vpm.Camera.Position);
-            Console.WriteLine(e.Delta);
+            //Console.WriteLine(e.Delta);
         }
 
         private void m_viewPort_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

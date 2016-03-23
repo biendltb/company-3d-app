@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace TIS_3dAntiCollision.Core
 {
@@ -27,8 +28,11 @@ namespace TIS_3dAntiCollision.Core
             
             // set margin
             var m = btn.Margin;
-            m.Right = 2;
+            m.Right = 0;
             btn.Margin = m;
+
+            // set style
+            btn.SetResourceReference(Control.StyleProperty, "FlatButtonStyle");
 
             return btn;
         }
