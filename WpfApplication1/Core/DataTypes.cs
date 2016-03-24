@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace TIS_3dAntiCollision.Core
 {
@@ -37,5 +34,12 @@ namespace TIS_3dAntiCollision.Core
         public double[] ScanData;
         public double XPos;
         public double PlaneAngle;
+    }
+
+    public enum LogType
+    {
+        Info,
+        Warning,
+        Error
     }
 }

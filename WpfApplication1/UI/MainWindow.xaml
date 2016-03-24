@@ -6,6 +6,11 @@
         Height="{Binding SystemParameters.PrimaryScreenHeight}" 
         Width="{Binding SystemParameters.PrimaryScreenWidth}">
     <Window.Resources>
+        <!--Image-->
+        <BitmapImage x:Key="led_green" UriSource="../images/led_green.png"/>
+        <BitmapImage x:Key="led_orange" UriSource="../images/led_orange.png"/>
+        <BitmapImage x:Key="led_red" UriSource="../images/led_red.png"/>
+        
         <!-- Flat Button Style -->
         <Color x:Key="DefaultColor" A="255" R="240" G ="240" B="240"/>
         <Color x:Key="HighlightColor" A="255" R="229" G ="229" B="229"/>
@@ -170,24 +175,71 @@
                           VerticalAlignment="Top">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10*"/>
-                                <ColumnDefinition Width="90*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="80*"/>
                             </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" HorizontalAlignment="Stretch" Orientation="Vertical">
+                                <Image x:Name="trolley_forward_led"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    Height="20"
+                                    Width="20"
+                                    Margin="5, 5, 5, 5"
+                                    Source="{StaticResource ResourceKey=led_green}"/>
+                                <Image x:Name="trolley_revert_led"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    Height="20"
+                                    Width="20"
+                                    Margin="5, 5, 5, 5"
+                                    Source="{StaticResource ResourceKey=led_green}"/>
+                                <Image x:Name="hoist_up_down_led"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    Height="20"
+                                    Width="20"
+                                    Margin="5, 5, 5, 5"
+                                    Source="{StaticResource ResourceKey=led_green}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical">
+                                <Label 
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 0, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Trolley forward" />
+                                <Label
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 0, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Trolley revert" />
+                                <Label
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 0, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Hoist Up/Down" />
+                            </StackPanel>
                         </Grid>
                         
                     </GroupBox>
                 </StackPanel>
             </Grid>
         </Grid>
+        <!--RICH TEXT BOX TO DISPLAY THE LOG-->
         <Grid Grid.Row="2">
-            <RichTextBox x:Name="rtb_log">
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                </RichTextBox.Resources>
+            <TabControl>
+                <TabItem Header="System logs">
+                    <ListBox x:Name="lb_log"
+                        VirtualizingStackPanel.IsVirtualizing="True" />
+                    <!--RichTextBox x:Name="rtb_log">
+                        <RichTextBox.Resources>
+                            <Style TargetType="{x:Type Paragraph}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </RichTextBox.Resources>
+                    </RichTextBox-->
 
-            </RichTextBox>
+                </TabItem>
+            </TabControl>
         </Grid>
         
     </Grid>

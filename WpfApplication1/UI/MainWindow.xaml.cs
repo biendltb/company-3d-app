@@ -32,8 +32,11 @@ namespace TIS_3dAntiCollision.UI
         Button sensor_btn = WindowContentManager.GetDefaultBtn();
         Button scan_btn = WindowContentManager.GetDefaultBtn();
 
-        // timer
-        DispatcherTimer m_timer = new DispatcherTimer();
+        // the timer only run when PLC connected
+        DispatcherTimer m_plc_timer = new DispatcherTimer();
+
+        // the service timer, always run
+        DispatcherTimer service_timer = new DispatcherTimer();
 
         public MainWindow()
         {
@@ -42,7 +45,6 @@ namespace TIS_3dAntiCollision.UI
             init();
 
             vpm = new ViewPortManager(m_viewPort);
-
         }
 
         private void init()
@@ -75,11 +77,32 @@ namespace TIS_3dAntiCollision.UI
             // set the timer
             // 1 ticks = 100 nanoseconds = 100 * 10^-6 milisecond
             // 50 milisecond
-            m_timer.Interval = new TimeSpan(ConfigParameters.TIMER_INTERVAL);
-            m_timer.Tick += new EventHandler(m_timer_Tick);
+            m_plc_timer.Interval = new TimeSpan(ConfigParameters.TIMER_INTERVAL);
+            m_plc_timer.Tick += new EventHandler(m_plc_timer_Tick);
+
+            // set service timer
+            service_timer.Interval = new TimeSpan(ConfigParameters.TIMER_INTERVAL);
+            service_timer.Tick += new EventHandler(service_timer_Tick);
+            service_timer.Start();
         }
 
-        private void m_timer_Tick(object sender, EventArgs e)
+        void service_timer_Tick(object sender, EventArgs e)
+        {
+            if (Logger.LogDisplayQueue.Count > 0)
+                foreach (string log in Logger.LogDisplayQueue)
+                    updateLog(log);
+
+            // clear queue (not synchronize multi-thread)
+            Logger.LogDisplayQueue.Clear();
+
+            if (lb_log.Items.Count > ConfigParameters.NUM_LOG_ON_MEMORY_LIMIT)
+                lb_log.Items.RemoveAt(0);
+
+            if (lb_log.Items.Count > 0)
+                lb_log.ScrollIntoView(lb_log.Items[lb_log.Items.Count - 1]);
+        }
+
+        private void m_plc_timer_Tick(object sender, EventArgs e)
         {
             // update struct
             PlcManager.GetInstance.ReadStruct();
@@ -98,19 +121,19 @@ namespace TIS_3dAntiCollision.UI
                 if (PlcManager.GetInstance.Connect() == 0)
                 {
                     WindowContentManager.DeactivePlcConnectBtn(plc_btn);
-                    log("PLC is successfully connected.");
-                    m_timer.Start();
+                    Logger.Log("PLC is successfully connected.", LogType.Info);
+                    m_plc_timer.Start();
                 }
                 else
                 {
-                    log("Unable to connect to PLC.");
+                    Logger.Log("Unable to connect to PLC.", LogType.Error);
                 }
             else
             {
                 PlcManager.GetInstance.Close();
                 WindowContentManager.ActivePlcConnectBtn(plc_btn);
-                log("PLC is disconnected.");
-                m_timer.Stop();
+                Logger.Log("PLC is disconnected.", LogType.Info);
+                m_plc_timer.Stop();
             }
         }
 
@@ -119,16 +142,16 @@ namespace TIS_3dAntiCollision.UI
             if (!SensorManger.GetInstance.IsConnect)
                 if (SensorManger.GetInstance.Connect())
                 {
-                    log("Sensor is successfully connected.");
+                    Logger.Log("Sensor is successfully connected.", LogType.Info);
                     WindowContentManager.ActiveSensorConnectBtn(sensor_btn);
                 }
                 else
-                    log("Error: Unable to connect to sensor.");
+                    Logger.Log("Error: Unable to connect to sensor.", LogType.Error);
             else
                 if (SensorManger.GetInstance.DisConnect())
                 {
                     WindowContentManager.DeactiveSensorConnectBtn(sensor_btn);
-                    log("Sensor is disconnected.");
+                    Logger.Log("Sensor is disconnected.", LogType.Info);
 
                 }
         }
@@ -162,11 +185,11 @@ namespace TIS_3dAntiCollision.UI
             }
         }
 
-        private void log(string log_cmd)
+        private void updateLog(string log_cmd)
         {
-            string log_line = DateTime.Now + " " + log_cmd + "\n";
-            rtb_log.AppendText(log_line);
-            rtb_log.ScrollToEnd();
+            ListBoxItem item = new ListBoxItem();
+            item.Content = log_cmd;
+            lb_log.Items.Add(item);
         }
 
         private void updateUIDisplay()

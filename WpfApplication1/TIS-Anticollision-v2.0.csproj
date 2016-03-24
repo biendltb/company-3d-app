@@ -62,6 +62,7 @@
     <Compile Include="Business\ScanController.cs" />
     <Compile Include="Business\SingleScanEncoder.cs" />
     <Compile Include="Business\ViewPortMouseActivity.cs" />
+    <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\DataStorageManager.cs" />
     <Compile Include="Services\ScanDataEncoder.cs" />
     <Compile Include="Services\Validator .cs" />
@@ -174,6 +175,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\led_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\led_orange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\led_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\led.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

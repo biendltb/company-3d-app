@@ -23,6 +23,10 @@ namespace TIS_3dAntiCollision.Core
         public const string CONFIG_FILE_PATH = @"..\..\dvconf.ini";
         public const string SCAN_DATA_STORE_PATH = @"..\..\ScanData\";
 
+        // LOG
+        public const string LOG_FOLDER_PATH = @"..\..\logs\";
+        public const int NUM_LOG_ON_MEMORY_LIMIT = 1000;
+
         // PLC
         public const int DATA_BLOCK_NUMBER = 3;
 
@@ -48,7 +52,6 @@ namespace TIS_3dAntiCollision.Core
         public const double MIDDLE_STACK_SECTION_LENGTH_Z = 50; // from -50 mm to 50mm
 
         // 3D representation
-
         public ContainerTypes MIDDLE_CONTAINER_TYPE = ContainerTypes.FortyFeet;
 
         // Profiling params
