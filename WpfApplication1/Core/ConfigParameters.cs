@@ -33,7 +33,7 @@ namespace TIS_3dAntiCollision.Core
         // Scan
         public const string SCAN_CMD = "sRN LMDscandata";
         public const double DEFAULT_STEP_LENGTH = 200;
-        public const double SENSOR_CENTER_OFFSET = 75;
+        //public const double SENSOR_CENTER_OFFSET = 75;
         public const double SENSOR_INIT_POSITION = 80;
 
         // movement

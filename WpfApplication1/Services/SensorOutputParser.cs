@@ -142,8 +142,8 @@ namespace TIS_3dAntiCollision.Services
 
                 // add the offset because the incorrect sensor set up
                 point.X = scan_data[i] * Math.Cos(beam_angle_rad) + x_pos;
-                point.Y = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Cos(plane_angle_rad) - ConfigParameters.SENSOR_CENTER_OFFSET * (1 - Math.Cos(plane_angle_rad));
-                point.Z = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Sin(plane_angle_rad) + ConfigParameters.SENSOR_CENTER_OFFSET * Math.Sin(plane_angle_rad);
+                point.Y = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Cos(plane_angle_rad);
+                point.Z = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Sin(plane_angle_rad);
 
                 list_3d_point.Add(point);
             }

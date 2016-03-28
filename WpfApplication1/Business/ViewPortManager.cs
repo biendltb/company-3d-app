@@ -30,6 +30,8 @@ namespace TIS_3dAntiCollision.Business
         private Color light_color = Colors.White;
         private Vector3D light_direction = new Vector3D(600, 1300, 100);
 
+        private int index_of_spreader = -1;
+
         public ViewPortManager(Viewport3D view_port)
         {
             this.view_port = view_port;
@@ -75,7 +77,17 @@ namespace TIS_3dAntiCollision.Business
             // add container stack to view
             foreach (Point3D point in stack_container_position)
                 model_group.Children.Add(getContainer(point, container_length, getContainerColor(point.Y)));
+        }
 
+        public void DisplaySpreader(Point3D spreader_position, bool isHoldingContainer)
+        {
+            GeometryModel3D spreader_container_model = getContainer(spreader_position, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH, Colors.Gold);
+
+            if (index_of_spreader != -1)
+                model_group.Children.RemoveAt(index_of_spreader);
+
+            model_group.Children.Add(spreader_container_model);
+            index_of_spreader = model_group.Children.IndexOf(spreader_container_model);
         }
 
         // create the square hollow to represent the line
@@ -264,5 +276,6 @@ namespace TIS_3dAntiCollision.Business
 
             return Colors.White;
         }
+
     }
 }
