@@ -61,7 +61,6 @@ namespace TIS_3dAntiCollision.Business
 
                                 scan_data_list.Add(single_scan_data);
                             }
-
                             scan_count++;
                         }
                     }

@@ -10,14 +10,16 @@ namespace TIS_3dAntiCollision.Core
         public const double TWENTY_FEET_CONTAINER_LENGTH = 300;
         public const double FORTY_FEET_CONTAINER_LENGTH = 600;
         public const double DEFAULT_SPACE_BETWEEN_CONTAINER = 15;
-        public const double SENSOR_TO_GROUND_DISTANCE = 1280;
+        public const double SENSOR_TO_GROUND_DISTANCE = 1286;
         public const double DEFAULT_SPACE_BETWEEN_STACK = 25;
 
         public const double MIDDLE_STACK_CONTAINER_LENGTH = 600;
         public const double LEFT_STACK_CONTAINER_LENGTH = 300;
+        public const double RIGHT_STACK_CONTAINER_LENGTH = 300;
 
-        // Timer interval
-        public const int TIMER_INTERVAL = 10 * 1000000 / 100;
+        // Timer interval (ms)
+        public const int TIMER_INTERVAL = 10;
+        public const int SCAN_TIMER_INTERVAL = 625;
 
         // Configuration file path
         public const string CONFIG_FILE_PATH = @"..\..\dvconf.ini";
@@ -33,8 +35,11 @@ namespace TIS_3dAntiCollision.Core
         // Scan
         public const string SCAN_CMD = "sRN LMDscandata";
         public const double DEFAULT_STEP_LENGTH = 200;
-        //public const double SENSOR_CENTER_OFFSET = 75;
         public const double SENSOR_INIT_POSITION = 80;
+        public const double START_3D_ANGLE = 27.8;
+        public const double SCAN_3D_ANGLE_RANGE = 119.88;
+        public const double SINGLE_SWIVEL_TIME = 20813; // milisecond
+        public const double SCAN_STEP_ANGLE = 3.6;
 
         // movement
         public const double MIN_TROLLEY_STOP_RANGE = 10;

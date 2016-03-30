@@ -1,0 +1,4 @@
+29/03/2016 13:06:22	Error	Unable to connect to PLC.
+29/03/2016 13:07:01	Info	PLC is successfully connected.
+29/03/2016 13:07:30	Info	PLC is successfully connected.
+29/03/2016 13:10:55	Info	PLC is disconnected.

@@ -37,7 +37,10 @@ namespace TIS_3dAntiCollision.Services
         private static void storeLog(string log)
         {
             log += "\n";
-            string log_file = DateTime.Now.ToString("dd-MM-yyyy-hh") + ".txt";
+            // save by hour
+            //string log_file = DateTime.Now.ToString("dd-MM-yyyy-hh") + ".txt";
+            // save by day
+            string log_file = DateTime.Now.ToString("dd-MM-yyyy") + ".txt";
             File.AppendAllText(ConfigParameters.LOG_FOLDER_PATH + log_file, log);
         }
 

@@ -140,10 +140,12 @@ namespace TIS_3dAntiCollision.Services
                 Point3D point = new Point3D();
                 double beam_angle_rad = (start_scan_angle + i * angle_resolution) * Math.PI / 180;
 
-                // add the offset because the incorrect sensor set up
+                // change the angle
+                //plane_angle_rad -= Math.PI;
+
                 point.X = scan_data[i] * Math.Cos(beam_angle_rad) + x_pos;
-                point.Y = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Cos(plane_angle_rad);
-                point.Z = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Sin(plane_angle_rad);
+                point.Y = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Sin(plane_angle_rad);
+                point.Z = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Cos(plane_angle_rad);
 
                 list_3d_point.Add(point);
             }

@@ -1,0 +1,2 @@
+29/03/2016 10:13:45	Error	Error: Unable to connect to sensor.
+29/03/2016 10:14:54	Error	Error: Unable to connect to sensor.

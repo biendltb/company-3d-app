@@ -38,17 +38,18 @@ namespace TIS_3dAntiCollision.UI
         // the service timer, always run
         DispatcherTimer service_timer = new DispatcherTimer();
 
+        // the timer for calculate the scan angle
+        DispatcherTimer scan_timer = new DispatcherTimer();
+
         // temporary
         int move_count = 0;
         bool isForward = true;
-
 
         public MainWindow()
         {
             InitializeComponent();
 
             init();
-
             vpm = new ViewPortManager(m_viewPort);
         }
 
@@ -78,24 +79,37 @@ namespace TIS_3dAntiCollision.UI
             buttonArea.Children.Add(scan_btn);
             buttonArea.Children.Add(move_to_btn);
             buttonArea.Children.Add(chart_btn);
-            
+
             // set the timer
             // 1 ticks = 100 nanoseconds = 100 * 10^-6 milisecond
             // 50 milisecond
-            m_plc_timer.Interval = new TimeSpan(ConfigParameters.TIMER_INTERVAL);
+            m_plc_timer.Interval = TimeSpan.FromMilliseconds(ConfigParameters.TIMER_INTERVAL);
             m_plc_timer.Tick += new EventHandler(m_plc_timer_Tick);
 
             // set service timer
-            service_timer.Interval = new TimeSpan(ConfigParameters.TIMER_INTERVAL);
+            service_timer.Interval = TimeSpan.FromMilliseconds(ConfigParameters.TIMER_INTERVAL);
             service_timer.Tick += new EventHandler(service_timer_Tick);
             service_timer.Start();
+
+            // set scan timer
+            scan_timer.Interval = TimeSpan.FromMilliseconds(ConfigParameters.SCAN_TIMER_INTERVAL);
+            scan_timer.Tick += new EventHandler(scan_timer_Tick);
+        }
+
+        void scan_timer_Tick(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         void service_timer_Tick(object sender, EventArgs e)
         {
             if (Logger.LogDisplayQueue.Count > 0)
+            {
                 foreach (string log in Logger.LogDisplayQueue)
                     updateLog(log);
+
+                lb_log.ScrollIntoView(lb_log.Items[lb_log.Items.Count - 1]);
+            }
 
             // clear queue (not synchronize multi-thread)
             Logger.LogDisplayQueue.Clear();
@@ -103,8 +117,8 @@ namespace TIS_3dAntiCollision.UI
             if (lb_log.Items.Count > ConfigParameters.NUM_LOG_ON_MEMORY_LIMIT)
                 lb_log.Items.RemoveAt(0);
 
-            if (lb_log.Items.Count > 0)
-                lb_log.ScrollIntoView(lb_log.Items[lb_log.Items.Count - 1]);
+            //if (lb_log.Items.Count > 0)
+            //    lb_log.ScrollIntoView(lb_log.Items[lb_log.Items.Count - 1]);
 
             // temporary
             if (move_count > 1000)
@@ -136,9 +150,6 @@ namespace TIS_3dAntiCollision.UI
 
             // excute scan command
             ScanController.Excute();
-
-            // display spreader
-            vpm.DisplaySpreader(new Point3D(300, 500, 0), true);
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)
@@ -221,13 +232,50 @@ namespace TIS_3dAntiCollision.UI
         private void updateUIDisplay()
         {
             tb_x_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.X_post, 2).ToString();
+            tb_y_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.Y_post, 2).ToString();
+
+            // update spreader display position
+            vpm.DisplaySpreader(new Point3D(PlcManager.GetInstance.OnlineDataBlock.X_post,
+                PlcManager.GetInstance.OnlineDataBlock.Y_post,
+                ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2), true);
+
+            // update light indicator
+            string led_red_key = "led_red";
+            string led_orange_key = "led_orange";
+            string led_green_key = "led_green";
+            // trolley forward indicator
+            if (PlcManager.GetInstance.OnlineDataBlock.T_Forward_Stop)
+                trolley_forward_led.Source = (ImageSource)Resources[led_red_key];
+            else
+                if (PlcManager.GetInstance.OnlineDataBlock.T_Revert_Slow)
+                    trolley_forward_led.Source = (ImageSource)Resources[led_orange_key];
+                else
+                    trolley_forward_led.Source = (ImageSource)Resources[led_green_key];
+
+            // trolley revert indicator
+            if (PlcManager.GetInstance.OnlineDataBlock.T_Revert_Stop)
+                trolley_revert_led.Source = (ImageSource)Resources[led_red_key];
+            else
+                if (PlcManager.GetInstance.OnlineDataBlock.T_Revert_Slow)
+                    trolley_revert_led.Source = (ImageSource)Resources[led_orange_key];
+                else
+                    trolley_revert_led.Source = (ImageSource)Resources[led_green_key];
+
+            // hoist up/down
+            if (PlcManager.GetInstance.OnlineDataBlock.H_Down_Stop || PlcManager.GetInstance.OnlineDataBlock.H_Up_Stop)
+                hoist_up_down_led.Source = (ImageSource)Resources[led_red_key];
+            else
+                if (PlcManager.GetInstance.OnlineDataBlock.H_Down_Slow || PlcManager.GetInstance.OnlineDataBlock.H_Up_Slow)
+                    hoist_up_down_led.Source = (ImageSource)Resources[led_orange_key];
+                else
+                    hoist_up_down_led.Source = (ImageSource)Resources[led_green_key];
         }
 
         // add for testing purpose
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //scan_data_1457689858
-            string file_path = @"../../ScanData/scan_data_side_2.txt";
+            string file_path = @"../../ScanData/scan_data_full-20s.txt";
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
             Point3D[][] multi_scan_3d_point = new Point3D[multi_scan_data_list.Count][];
@@ -249,10 +297,12 @@ namespace TIS_3dAntiCollision.UI
             ContainerStackProfiler csp = new ContainerStackProfiler(list_point.ToArray());
 
             Point3D[] middle_stack_profile_points = csp.GetMiddleStackProfile();
-            Point3D[] side_stack_profile_points = csp.GetSideStackProfile();
+            Point3D[] left_stack_profile_points = csp.GetSideStackProfile(true);
+            Point3D[] right_stack_profile_points = csp.GetSideStackProfile(false);
 
             vpm.DisplayContainerStack(middle_stack_profile_points, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH);
-            vpm.DisplayContainerStack(side_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
+            vpm.DisplayContainerStack(left_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
+            vpm.DisplayContainerStack(right_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
 
             //(new DataRepresentChart(list_point.ToArray())).Show();
         }
@@ -278,6 +328,19 @@ namespace TIS_3dAntiCollision.UI
                 vpm.Camera.Position = new_camera_position;
                 vpm.Camera.LookDirection = new_camera_look_direction;
             }
+        }
+
+        private void MenuMotorItem_Click(object sender, RoutedEventArgs e)
+        {
+            PlcManager.GetInstance.OnlineDataBlock.Start_swivel = true;
+            PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            PlcManager.GetInstance.WriteStruct();
+        }
+
+        private void MenuItem_Test3DScan_Click(object sender, RoutedEventArgs e)
+        {
+            // trigger mini motor to start scan
+            MiniMotorManager.GetInstance().Trigger();
         }
     }
 }

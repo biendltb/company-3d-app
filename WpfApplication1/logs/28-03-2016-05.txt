@@ -1,0 +1,7 @@
+28/03/2016 17:55:14	Info	PLC is successfully connected.
+28/03/2016 17:56:03	Info	PLC is successfully connected.
+28/03/2016 17:56:44	Info	PLC is successfully connected.
+28/03/2016 17:57:35	Info	PLC is successfully connected.
+28/03/2016 17:57:39	Info	PLC is disconnected.
+28/03/2016 17:58:25	Info	PLC is successfully connected.
+28/03/2016 17:59:21	Info	PLC is successfully connected.

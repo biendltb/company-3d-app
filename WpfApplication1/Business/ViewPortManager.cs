@@ -177,7 +177,8 @@ namespace TIS_3dAntiCollision.Business
 
         }
 
-        // generate model 
+        // generate model
+        // container pos: bottom - right
         private GeometryModel3D getContainer(Point3D container_position, double container_length, Color container_color)
         {
             GeometryModel3D geometry_model = new GeometryModel3D();

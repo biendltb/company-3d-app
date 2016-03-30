@@ -75,6 +75,8 @@
                 <MenuItem Header="_Testing">
                     <!--Add for testing purpose-->
                     <MenuItem Header="Test1" Click="MenuItem_Click"/>
+                    <MenuItem Header="Test_Motor" Click="MenuMotorItem_Click"/>
+                    <MenuItem Header="Test 3D Scan" Click="MenuItem_Test3DScan_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Help" />
             </Menu>

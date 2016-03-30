@@ -21,6 +21,7 @@ namespace TIS_3dAntiCollision.Core
         public bool H_Down_Slow;
         public bool H_Up_Stop;
         public bool H_Down_Stop;
+        public bool Start_swivel;
         public double X_post;
         public double Y_post;
         public Int16 T_SetPoint;

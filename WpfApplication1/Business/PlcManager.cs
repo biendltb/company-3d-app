@@ -75,6 +75,13 @@ namespace TIS_3dAntiCollision.Business
             return plc.WriteStruct(OnlineDataBlock, ConfigParameters.DATA_BLOCK_NUMBER).ToString();
         }
 
+
+        public void TriggerMiniMotor()
+        {
+            PlcManager.GetInstance.OnlineDataBlock.Start_swivel = true;
+            PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            PlcManager.GetInstance.WriteStruct();
+        }
         
     }
 }
