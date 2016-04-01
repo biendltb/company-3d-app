@@ -40,6 +40,7 @@ namespace TIS_3dAntiCollision.Core
         public const double SCAN_3D_ANGLE_RANGE = 119.88;
         public const double SINGLE_SWIVEL_TIME = 20813; // milisecond
         public const double SCAN_STEP_ANGLE = 3.6;
+        public const double OFFSET_SCAN_SETUP = 27;
 
         // movement
         public const double MIN_TROLLEY_STOP_RANGE = 10;
@@ -62,11 +63,12 @@ namespace TIS_3dAntiCollision.Core
         // Profiling params
         public const double MAX_Y_DEVIATION = 15;
         public const double MAX_X_DEVIATION = 10;
-        public const int SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS = 3;
-        public const int SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT = 3;
+        public const int PROFILING_VERTICAL_LINE_THICKNESS = 3;
+        public const int PROFILING_VERTICAL_NUM_POINT_LIMIT = 3;
+        public const int PROFILING_HORIZONTAL_LINE_THICKNESS = 3;
+        public const int PROFILING_HORIZONTAL_NUM_POINT_LIMIT = 5;
         public const int MERGE_LINE_DISTANCE = 10;
-        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 30;
-        public const int DEFAULT_VERTICAL_LINE_SCORE = 5;
+        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 102;
 
     }
 }

@@ -64,12 +64,9 @@ namespace TIS_3dAntiCollision.UI
             foreach (Point3D[] point_arr in multi_scan_3d_point)
                 foreach (Point3D point in point_arr)
                 {
-                    if (point.Z >= -250 && point.Z <= 250)
+                    if (point.Z >= -300 && point.Z <= 300)
                         list_point.Add(point);
                 }
-
-
-
             point_data = list_point.ToArray();
         }
 

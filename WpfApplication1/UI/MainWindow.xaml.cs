@@ -149,7 +149,7 @@ namespace TIS_3dAntiCollision.UI
             MovementController.Execute();
 
             // excute scan command
-            ScanController.Excute();
+            SinglePlaneScanController.Excute();
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)
@@ -195,7 +195,8 @@ namespace TIS_3dAntiCollision.UI
 
         private void scan_btn_Click(object sender, RoutedEventArgs e)
         {
-            (new Scan()).Show();
+            //(new Scan()).Show();
+            MiniMotorManager.GetInstance().Trigger();
         }
 
         void move_to_btn_Click(object sender, RoutedEventArgs e)
@@ -275,7 +276,7 @@ namespace TIS_3dAntiCollision.UI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //scan_data_1457689858
-            string file_path = @"../../ScanData/scan_data_full-20s.txt";
+            string file_path = @"../../ScanData/scan_data_1459481767.txt";
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
             Point3D[][] multi_scan_3d_point = new Point3D[multi_scan_data_list.Count][];

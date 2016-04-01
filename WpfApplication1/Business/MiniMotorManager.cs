@@ -10,7 +10,7 @@ namespace TIS_3dAntiCollision.Business
     {
         static readonly MiniMotorManager m3 = new MiniMotorManager();
 
-        private static DispatcherTimer timer = new DispatcherTimer();
+        private static DispatcherTimer timer;
 
         private static List<SingleScanData> scan_data_list = new List<SingleScanData>();
 
@@ -33,19 +33,25 @@ namespace TIS_3dAntiCollision.Business
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            double step_angle = ConfigParameters.SCAN_3D_ANGLE_RANGE 
-                / ConfigParameters.SINGLE_SWIVEL_TIME 
-                * ConfigParameters.SCAN_TIMER_INTERVAL;
+            //double step_angle = ConfigParameters.SCAN_3D_ANGLE_RANGE
+            //    / ConfigParameters.SINGLE_SWIVEL_TIME
+            //    * ConfigParameters.SCAN_TIMER_INTERVAL;
+
+            double step_angle = ConfigParameters.SCAN_STEP_ANGLE;
 
             realTimeAngle += step_angle;
 
             updateAngle(realTimeAngle);
 
             Logger.Log(realTimeAngle.ToString());
+
+            // trigger motor for next scan
+            //PlcManager.GetInstance.TriggerMiniMotor();
         }
 
         public void Trigger()
         {
+            timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(ConfigParameters.SCAN_TIMER_INTERVAL);
             timer.Tick += new EventHandler(timer_Tick);
 
@@ -77,8 +83,16 @@ namespace TIS_3dAntiCollision.Business
                         SensorManger.GetInstance.Scan();
                         SingleScanData single_scan_data = new SingleScanData();
                         single_scan_data.ScanData = SensorManger.GetInstance.RoughtData;
-                        single_scan_data.XPos = PlcManager.GetInstance.OnlineDataBlock.X_post; ;
-                        single_scan_data.PlaneAngle = real_time_angle;
+
+                        // add offset
+                        for (int i = 0; i < single_scan_data.ScanData.Length; i++)
+                            single_scan_data.ScanData[i] = Math.Sqrt(ConfigParameters.OFFSET_SCAN_SETUP * ConfigParameters.OFFSET_SCAN_SETUP 
+                                + single_scan_data.ScanData[i] * single_scan_data.ScanData[i]);
+
+                        // add offset to angle
+                        single_scan_data.PlaneAngle = real_time_angle + Math.Asin(ConfigParameters.OFFSET_SCAN_SETUP / single_scan_data.ScanData[135]) / Math.PI * 180;
+
+                        single_scan_data.XPos = PlcManager.GetInstance.OnlineDataBlock.X_post;
 
                         scan_data_list.Add(single_scan_data);
                     }

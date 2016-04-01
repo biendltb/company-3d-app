@@ -35,19 +35,32 @@ namespace TIS_3dAntiCollision.UI
                 return;
             }
 
-            if (double.Parse(tb_x_pos.Text) < ConfigParameters.MIN_X_RANGE || double.Parse(tb_x_pos.Text) > ConfigParameters.MAX_X_RANGE)
-            {
-                MessageBox.Show("Destination is out of range", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             if (!PlcManager.GetInstance.IsConnect)
             {
                 MessageBox.Show("Please check the PLC connection", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MovementController.AddMove(double.Parse(tb_x_pos.Text), (short)double.Parse(tb_speed.Text));
+            string[] destination_arr = tb_x_pos.Text.Trim().Split(',');
+            string[] speed_arr = tb_speed.Text.Trim().Split(',');
+
+            if (destination_arr.Length != speed_arr.Length)
+            {
+                MessageBox.Show("Please check the input", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            for (int i = 0; i < destination_arr.Length; i++)
+            {
+
+                if (double.Parse(destination_arr[i].Trim()) < ConfigParameters.MIN_X_RANGE || double.Parse(destination_arr[i].Trim()) > ConfigParameters.MAX_X_RANGE)
+                {
+                    MessageBox.Show("Destination is out of range", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                MovementController.AddMove(double.Parse(destination_arr[i].Trim()), (short)double.Parse(speed_arr[i].Trim()));
+            }
 
             this.Close();
         }

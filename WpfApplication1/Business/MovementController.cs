@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TIS_3dAntiCollision.Core;
 using System;
+using TIS_3dAntiCollision.Services;
 
 namespace TIS_3dAntiCollision.Business
 {
@@ -51,7 +52,7 @@ namespace TIS_3dAntiCollision.Business
             {
                 // finish task
                 stopTrolley();
-                Console.WriteLine("STOP: " + current_pos);
+                Logger.Log("Stopped at: " + current_pos);
                 isOnMove = false;
                 return true;
             }

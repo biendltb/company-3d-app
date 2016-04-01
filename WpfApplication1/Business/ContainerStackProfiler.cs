@@ -13,7 +13,7 @@ namespace TIS_3dAntiCollision.Business
         private Point3D[] point_data;
 
         private KeyValuePair<double, int> base_container_stack_point = new KeyValuePair<double, int>(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
-                                                                                                        ConfigParameters.DEFAULT_VERTICAL_LINE_SCORE);
+                                                                                                        ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
 
         // save x position and height of each middle column
         List<KeyValuePair<double, double>> list_x_pos_height = new List<KeyValuePair<double, double>>();
@@ -29,7 +29,7 @@ namespace TIS_3dAntiCollision.Business
         /// - We need: start x position of stack (will be specific in the real), height of each column
         /// => Proposal: find the vertical line first, get all section that container is surely inside, calculate the level => display
         /// </summary>
-        /// <returns>Set x, y only, haven't set z axis </returns>
+        /// <returns>Set x, y, z axis </returns>
         public Point3D[] GetMiddleStackProfile()
         {
             List<Point3D> list_middle_container_position = new List<Point3D>();
@@ -62,42 +62,39 @@ namespace TIS_3dAntiCollision.Business
                 y_arr[i] = list_vertical_line_point[i].Y;
             }
             
-            KeyValuePair<double, int>[] lines = getLines(x_arr, y_arr, ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS,
-                                                            ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
+            KeyValuePair<double, int>[] lines = getLines(x_arr, y_arr, ConfigParameters.PROFILING_VERTICAL_LINE_THICKNESS,
+                                                            ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
+            KeyValuePair<double, int> top_line = new KeyValuePair<double, int>(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
 
             if (lines.Length > 0)
             {
-                KeyValuePair<double, int> top_line = lines[0];
+                top_line = lines[0];
+            }
+            // find the x start of container range
+            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+            double start_container_range = top_line.Key - (int)(top_line.Key / container_column_width) * container_column_width;
 
-                if (top_line.Key != -1)
+            // set the base container stack point
+            if (top_line.Value > base_container_stack_point.Value)
+                base_container_stack_point = new KeyValuePair<double, int>(start_container_range, top_line.Value);
+
+            double start_column_x = start_container_range;
+
+            while (start_column_x + container_column_width < ConfigParameters.MAX_X_RANGE)
+            {
+                // get level between column section
+                double avg_y = getAverageYValue(start_column_x, start_column_x + container_column_width, list_horizontal_line_point.ToArray());
+                byte level = (byte)Math.Round(Math.Abs(ConfigParameters.SENSOR_TO_GROUND_DISTANCE - avg_y) / ConfigParameters.CONTAINER_HEIGHT);
+                if (level != 0)
                 {
-                    // find the x start of container range
-                    double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
-                    double start_container_range = top_line.Key - (int)(top_line.Key / container_column_width) * container_column_width;
+                    for (int i = 0; i < level; i++)
+                        list_middle_container_position.Add(new Point3D(start_column_x, ConfigParameters.SENSOR_TO_GROUND_DISTANCE - i *
+                                                                ConfigParameters.CONTAINER_HEIGHT, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2));
 
-                    // set the base container stack point
-                    if (top_line.Value > base_container_stack_point.Value)
-                        base_container_stack_point = new KeyValuePair<double, int>(start_container_range, top_line.Value);
-
-                    double start_column_x = start_container_range;
-
-                    while (start_column_x + container_column_width < ConfigParameters.MAX_X_RANGE)
-                    {
-                        // get level between column section
-                        double avg_y = getAverageYValue(start_column_x, start_column_x + container_column_width, list_horizontal_line_point.ToArray());
-                        byte level = (byte)Math.Round(Math.Abs(ConfigParameters.SENSOR_TO_GROUND_DISTANCE - avg_y) / ConfigParameters.CONTAINER_HEIGHT);
-                        if (level != 0)
-                        {
-                            for (int i = 0; i < level; i++)
-                                list_middle_container_position.Add(new Point3D(start_column_x, ConfigParameters.SENSOR_TO_GROUND_DISTANCE - i *
-                                                                        ConfigParameters.CONTAINER_HEIGHT, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2));
-
-                            list_x_pos_height.Add(new KeyValuePair<double, double>(start_column_x, avg_y));
-                        }
-
-                        start_column_x += container_column_width;
-                    }
+                    list_x_pos_height.Add(new KeyValuePair<double, double>(start_column_x, avg_y));
                 }
+
+                start_column_x += container_column_width;
             }
 
             return list_middle_container_position.ToArray();
@@ -159,7 +156,7 @@ namespace TIS_3dAntiCollision.Business
 
                 // find the highest horizontal line -> exchange x & y
                 KeyValuePair<double, int>[] lines = getLines(list_y_tmp.ToArray(), list_x_tmp.ToArray(),
-                    ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS, ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT, 
+                    ConfigParameters.PROFILING_HORIZONTAL_LINE_THICKNESS, ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT, 
                     ConfigParameters.MERGE_LINE_DISTANCE);
 
                 double highest_stack = ConfigParameters.SENSOR_TO_GROUND_DISTANCE;
@@ -221,8 +218,8 @@ namespace TIS_3dAntiCollision.Business
                         list_y_tmp.Add(point.Y);
                     }
 
-                KeyValuePair<double, int>[] lines = getLines(list_y_tmp.ToArray(), list_x_tmp.ToArray(), ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_LINE_THICKNESS,
-                                            ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
+                KeyValuePair<double, int>[] lines = getLines(list_y_tmp.ToArray(), list_x_tmp.ToArray(), ConfigParameters.PROFILING_HORIZONTAL_LINE_THICKNESS,
+                                            ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
 
                 double column_height = ConfigParameters.SENSOR_TO_GROUND_DISTANCE;
                 if (lines.Length > 0)
@@ -351,7 +348,7 @@ namespace TIS_3dAntiCollision.Business
 
             // filter the line that not meet the limited threshold
             for (int i = 0; i < list_frequency.Count; i++)
-                if (list_frequency[i] < ConfigParameters.SINGLE_SCAN_PROFILING_VERTICAL_NUM_POINT_LIMIT)
+                if (list_frequency[i] < num_point_limit)
                 {
                     list_frequency.RemoveAt(i);
                     list_line.RemoveAt(i);
@@ -418,5 +415,7 @@ namespace TIS_3dAntiCollision.Business
 
             return sum / count;
         }
+
+
     }
 }

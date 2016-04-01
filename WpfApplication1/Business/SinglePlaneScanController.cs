@@ -8,9 +8,9 @@ using TIS_3dAntiCollision.Services;
 namespace TIS_3dAntiCollision.Business
 {
     /// <summary>
-    /// Control the scan process and collect data
+    /// Auto trolley and scan in one plane
     /// </summary>
-    static class ScanController
+    static class SinglePlaneScanController
     {
         private static bool is_scan_task_trigger = false;
 

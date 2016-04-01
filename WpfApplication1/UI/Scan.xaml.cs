@@ -49,7 +49,7 @@ namespace TIS_3dAntiCollision.UI
                     return;
 
                 // trigger the scan
-                ScanController.TriggerScan(double.Parse(tb_start_x.Text), double.Parse(tb_stop_x.Text),
+                SinglePlaneScanController.TriggerScan(double.Parse(tb_start_x.Text), double.Parse(tb_stop_x.Text),
                                             short.Parse(tb_speed.Text), double.Parse(tb_step_length.Text), double.Parse(tb_plane_angle.Text), tb_data_file_name.Text);
 
                 this.Close();
