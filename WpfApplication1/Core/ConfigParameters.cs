@@ -50,7 +50,7 @@ namespace TIS_3dAntiCollision.Core
         // range limit
         public const double MAX_X_RANGE = 1725;
         public const double MIN_X_RANGE = 0;
-        public const double MIN_Y_RANGE = 0;
+        public const double MIN_Y_RANGE = 404; // sensor_to_ground - <6-container height>
         public const double MAX_Y_RANGE = 1400;
 
         // Divide middle container to many sections
@@ -68,7 +68,7 @@ namespace TIS_3dAntiCollision.Core
         public const int PROFILING_HORIZONTAL_LINE_THICKNESS = 3;
         public const int PROFILING_HORIZONTAL_NUM_POINT_LIMIT = 5;
         public const int MERGE_LINE_DISTANCE = 10;
-        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 102;
+        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 72;
 
     }
 }

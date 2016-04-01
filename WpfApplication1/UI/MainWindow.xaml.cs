@@ -41,10 +41,6 @@ namespace TIS_3dAntiCollision.UI
         // the timer for calculate the scan angle
         DispatcherTimer scan_timer = new DispatcherTimer();
 
-        // temporary
-        int move_count = 0;
-        bool isForward = true;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -119,24 +115,6 @@ namespace TIS_3dAntiCollision.UI
 
             //if (lb_log.Items.Count > 0)
             //    lb_log.ScrollIntoView(lb_log.Items[lb_log.Items.Count - 1]);
-
-            // temporary
-            if (move_count > 1000)
-            {
-                isForward = false;
-            }
-            else
-                if (move_count < 0)
-                {
-                    isForward = true;
-                }
-
-            if (isForward)
-                move_count++;
-            else
-                move_count--;
-
-            vpm.DisplaySpreader(new Point3D(300 + move_count, 1000, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2), true);
         }
 
         private void m_plc_timer_Tick(object sender, EventArgs e)
@@ -276,7 +254,7 @@ namespace TIS_3dAntiCollision.UI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //scan_data_1457689858
-            string file_path = @"../../ScanData/scan_data_1459481767.txt";
+            string file_path = @"../../ScanData/scan_data_1459516863.txt";
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
             Point3D[][] multi_scan_3d_point = new Point3D[multi_scan_data_list.Count][];
@@ -294,12 +272,12 @@ namespace TIS_3dAntiCollision.UI
                 foreach (Point3D point in point_arr)
                     list_point.Add(point);
 
-            // profiling the middle container profile
+             //profiling the middle container profile
             ContainerStackProfiler csp = new ContainerStackProfiler(list_point.ToArray());
 
             Point3D[] middle_stack_profile_points = csp.GetMiddleStackProfile();
-            Point3D[] left_stack_profile_points = csp.GetSideStackProfile(true);
-            Point3D[] right_stack_profile_points = csp.GetSideStackProfile(false);
+            Point3D[] left_stack_profile_points = csp.GetSideStackProfile(false);
+            Point3D[] right_stack_profile_points = csp.GetSideStackProfile(true);
 
             vpm.DisplayContainerStack(middle_stack_profile_points, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH);
             vpm.DisplayContainerStack(left_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);

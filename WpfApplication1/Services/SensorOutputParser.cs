@@ -133,7 +133,7 @@ namespace TIS_3dAntiCollision.Services
             double start_scan_angle = double.Parse(ConfigFileManager.ReadSensorStartAngle());
             double angle_resolution = double.Parse(ConfigFileManager.ReadSensorAngleResolution());
 
-            double plane_angle_rad = plane_angle * Math.PI / 180;
+            double plane_angle_rad = (plane_angle-7) * Math.PI / 180;
 
             for (int i = 0; i < scan_data.Length; i++)
             {
@@ -144,8 +144,8 @@ namespace TIS_3dAntiCollision.Services
                 //plane_angle_rad -= Math.PI;
 
                 point.X = scan_data[i] * Math.Cos(beam_angle_rad) + x_pos;
-                point.Y = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Sin(plane_angle_rad);
-                point.Z = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Cos(plane_angle_rad);
+                point.Y = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Sin(plane_angle_rad) - Math.Cos(plane_angle_rad) * 27;
+                point.Z = scan_data[i] * Math.Sin(beam_angle_rad) * Math.Cos(plane_angle_rad) + Math.Sin(plane_angle_rad) * 27;
 
                 list_3d_point.Add(point);
             }

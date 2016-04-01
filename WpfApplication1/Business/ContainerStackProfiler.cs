@@ -62,9 +62,11 @@ namespace TIS_3dAntiCollision.Business
                 y_arr[i] = list_vertical_line_point[i].Y;
             }
             
+            // find strongest vertical line
             KeyValuePair<double, int>[] lines = getLines(x_arr, y_arr, ConfigParameters.PROFILING_VERTICAL_LINE_THICKNESS,
                                                             ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
-            KeyValuePair<double, int> top_line = new KeyValuePair<double, int>(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
+            KeyValuePair<double, int> top_line = new KeyValuePair<double, int>(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
+                ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
 
             if (lines.Length > 0)
             {
@@ -75,10 +77,10 @@ namespace TIS_3dAntiCollision.Business
             double start_container_range = top_line.Key - (int)(top_line.Key / container_column_width) * container_column_width;
 
             // set the base container stack point
-            if (top_line.Value > base_container_stack_point.Value)
+            if (top_line.Value >= base_container_stack_point.Value)
                 base_container_stack_point = new KeyValuePair<double, int>(start_container_range, top_line.Value);
 
-            double start_column_x = start_container_range;
+            double start_column_x = base_container_stack_point.Key;
 
             while (start_column_x + container_column_width < ConfigParameters.MAX_X_RANGE)
             {
@@ -107,9 +109,9 @@ namespace TIS_3dAntiCollision.Business
         /// - Get the side container stack profile from side data
         /// - NOTE: Middle container stack profile must be conducted first
         /// </summary>
-        /// <param name="isLeft">Left stack or Right stack</param>
+        /// <param name="isRight">Left stack or Right stack</param>
         /// <returns></returns>
-        public Point3D[] GetSideStackProfile(bool isLeft)
+        public Point3D[] GetSideStackProfile(bool isRight)
         {
             List<Point3D> list_side_container_position = new List<Point3D>();
 
@@ -121,7 +123,7 @@ namespace TIS_3dAntiCollision.Business
             List<Point3D> list_obstacle_containers_pos = new List<Point3D>();
 
             // filter to get all point in the overlap range
-            if (!isLeft)
+            if (!isRight)
             {
                 foreach (Point3D point in point_data)
                     if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2)
@@ -177,11 +179,12 @@ namespace TIS_3dAntiCollision.Business
                             sum_z_tmp += list_z_tmp[j];
                             z_count++;
                         }
-
-                    list_obstacle_containers_pos.Add(new Point3D(list_x_pos_height[i].Key,
-                        ConfigParameters.SENSOR_TO_GROUND_DISTANCE -
-                            (((byte)((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_stack) / ConfigParameters.CONTAINER_HEIGHT)) * ConfigParameters.CONTAINER_HEIGHT),
-                        sum_z_tmp / z_count));
+                    if (z_count != 0)
+                        list_obstacle_containers_pos.Add(new Point3D(list_x_pos_height[i].Key,
+                            ConfigParameters.SENSOR_TO_GROUND_DISTANCE -
+                                (((Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_stack) / ConfigParameters.CONTAINER_HEIGHT)) - 1) * 
+                                ConfigParameters.CONTAINER_HEIGHT),
+                                sum_z_tmp / z_count));
 
                 }
             }
@@ -190,7 +193,7 @@ namespace TIS_3dAntiCollision.Business
             double start_side_stack_x = ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK;
             double start_column_x = base_container_stack_point.Key;
             // collect the point of side container stack based on Z
-            if (!isLeft)
+            if (!isRight)
             {
                 foreach (Point3D point in point_data)
                     if (point.Z >= start_side_stack_x && point.Z <= start_side_stack_x + ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH)
@@ -236,18 +239,7 @@ namespace TIS_3dAntiCollision.Business
             }
 
             // update Z position of obstacle container
-            if (!isLeft)
-                for (int i = 0; i < list_side_container_position.Count; i++)
-                {
-                    list_side_container_position[i] = new Point3D(list_side_container_position[i].X, list_side_container_position[i].Y,
-                                                                            -ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK);
-
-                    foreach (Point3D obstacle_point in list_obstacle_containers_pos)
-                        if (list_side_container_position[i].X == obstacle_point.X && list_side_container_position[i].Y == obstacle_point.Y)
-                            list_side_container_position[i] = new Point3D(obstacle_point.X, obstacle_point.Y, obstacle_point.Z);
-
-                }
-            else
+            if (!isRight)
                 for (int i = 0; i < list_side_container_position.Count; i++)
                 {
                     list_side_container_position[i] = new Point3D(list_side_container_position[i].X, list_side_container_position[i].Y,
@@ -256,7 +248,19 @@ namespace TIS_3dAntiCollision.Business
 
                     foreach (Point3D obstacle_point in list_obstacle_containers_pos)
                         if (list_side_container_position[i].X == obstacle_point.X && list_side_container_position[i].Y == obstacle_point.Y)
-                            list_side_container_position[i] = new Point3D(obstacle_point.X, obstacle_point.Y, obstacle_point.Z + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
+                            list_side_container_position[i] = new Point3D(obstacle_point.X, obstacle_point.Y, 
+                                obstacle_point.Z + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
+
+                }
+            else
+                for (int i = 0; i < list_side_container_position.Count; i++)
+                {
+                    list_side_container_position[i] = new Point3D(list_side_container_position[i].X, list_side_container_position[i].Y,
+                                                                            - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK);
+
+                    foreach (Point3D obstacle_point in list_obstacle_containers_pos)
+                        if (list_side_container_position[i].X == obstacle_point.X && list_side_container_position[i].Y == obstacle_point.Y)
+                            list_side_container_position[i] = new Point3D(obstacle_point.X, obstacle_point.Y, obstacle_point.Z);
 
                 }
 

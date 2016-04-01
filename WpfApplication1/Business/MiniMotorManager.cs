@@ -43,7 +43,7 @@ namespace TIS_3dAntiCollision.Business
 
             updateAngle(realTimeAngle);
 
-            Logger.Log(realTimeAngle.ToString());
+            //Logger.Log(realTimeAngle.ToString());
 
             // trigger motor for next scan
             //PlcManager.GetInstance.TriggerMiniMotor();
@@ -85,12 +85,14 @@ namespace TIS_3dAntiCollision.Business
                         single_scan_data.ScanData = SensorManger.GetInstance.RoughtData;
 
                         // add offset
-                        for (int i = 0; i < single_scan_data.ScanData.Length; i++)
-                            single_scan_data.ScanData[i] = Math.Sqrt(ConfigParameters.OFFSET_SCAN_SETUP * ConfigParameters.OFFSET_SCAN_SETUP 
-                                + single_scan_data.ScanData[i] * single_scan_data.ScanData[i]);
+                        //for (int i = 0; i < single_scan_data.ScanData.Length; i++)
+                        //    single_scan_data.ScanData[i] = Math.Sqrt(ConfigParameters.OFFSET_SCAN_SETUP * ConfigParameters.OFFSET_SCAN_SETUP 
+                        //        + single_scan_data.ScanData[i] * single_scan_data.ScanData[i]);
 
                         // add offset to angle
-                        single_scan_data.PlaneAngle = real_time_angle + Math.Asin(ConfigParameters.OFFSET_SCAN_SETUP / single_scan_data.ScanData[135]) / Math.PI * 180;
+                        //single_scan_data.PlaneAngle = real_time_angle + Math.Asin(ConfigParameters.OFFSET_SCAN_SETUP / single_scan_data.ScanData[135]) / Math.PI * 180;
+
+                        single_scan_data.PlaneAngle = real_time_angle;
 
                         single_scan_data.XPos = PlcManager.GetInstance.OnlineDataBlock.X_post;
 
