@@ -1,1 +1,0 @@
-29/03/2016 14:59:08	Info	PLC is successfully connected.
