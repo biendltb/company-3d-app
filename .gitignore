@@ -1,3 +1,4 @@
 WpfApplication1/ScanData/*.txt
 WpfApplication1/logs/*.txt
 WpfApplication1/obj/
+WpfApplication1/bin/

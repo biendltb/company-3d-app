@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TIS_3dAntiCollision.Core;
 using TIS_3dAntiCollision.Business;
+using TIS_3dAntiCollision.Services;
 
 namespace TIS_3dAntiCollision.UI
 {
@@ -58,6 +59,8 @@ namespace TIS_3dAntiCollision.UI
                     MessageBox.Show("Destination is out of range", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+
+                Logger.Log("Add to itinerary: Destination: " + destination_arr[i].Trim() + " Speed: " + speed_arr[i].Trim());
 
                 MovementController.AddMove(double.Parse(destination_arr[i].Trim()), (short)double.Parse(speed_arr[i].Trim()));
             }

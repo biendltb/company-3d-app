@@ -41,7 +41,7 @@ namespace TIS_3dAntiCollision.Business
 
             // filter points in middle z range of middle container stack
             foreach (Point3D point in point_data)
-                if (Math.Abs(point.Z) <= ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z)
+                if (Math.Abs(point.Z) <= ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z - ConfigParameters.Z_OFFSET)
                     list_middle_container_stack_point.Add(point);
 
             // collect vertical line points
@@ -126,13 +126,13 @@ namespace TIS_3dAntiCollision.Business
             if (!isRight)
             {
                 foreach (Point3D point in point_data)
-                    if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2)
+                    if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.Z_OFFSET)
                         list_point_in_container_overlap_range.Add(point);
             }
             else
             {
                 foreach (Point3D point in point_data)
-                    if (point.Z < - ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z > - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2)
+                    if (point.Z < - ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z > - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.Z_OFFSET)
                         list_point_in_container_overlap_range.Add(point);
             }
 
@@ -182,8 +182,8 @@ namespace TIS_3dAntiCollision.Business
                     if (z_count != 0)
                         list_obstacle_containers_pos.Add(new Point3D(list_x_pos_height[i].Key,
                             ConfigParameters.SENSOR_TO_GROUND_DISTANCE -
-                                (((Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_stack) / ConfigParameters.CONTAINER_HEIGHT)) - 1) * 
-                                ConfigParameters.CONTAINER_HEIGHT),
+                                (((Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_stack) / ConfigParameters.CONTAINER_HEIGHT)) - 1) 
+                                * ConfigParameters.CONTAINER_HEIGHT),
                                 sum_z_tmp / z_count));
 
                 }

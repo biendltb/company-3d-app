@@ -254,7 +254,7 @@ namespace TIS_3dAntiCollision.UI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //scan_data_1457689858
-            string file_path = @"../../ScanData/scan_data_1459516863.txt";
+            string file_path = @"../../ScanData/scan_data_1459767924.txt";
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
             Point3D[][] multi_scan_3d_point = new Point3D[multi_scan_data_list.Count][];

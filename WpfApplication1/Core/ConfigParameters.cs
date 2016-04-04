@@ -35,12 +35,14 @@ namespace TIS_3dAntiCollision.Core
         // Scan
         public const string SCAN_CMD = "sRN LMDscandata";
         public const double DEFAULT_STEP_LENGTH = 200;
-        public const double SENSOR_INIT_POSITION = 80;
-        public const double START_3D_ANGLE = 27.8;
+        //public const double SENSOR_INIT_POSITION = 80;
+        public const double START_3D_ANGLE = 25.8;//23.8; //27.8;
         public const double SCAN_3D_ANGLE_RANGE = 119.88;
-        public const double SINGLE_SWIVEL_TIME = 20813; // milisecond
+        //public const double SINGLE_SWIVEL_TIME = 20813; // milisecond
         public const double SCAN_STEP_ANGLE = 3.6;
         public const double OFFSET_SCAN_SETUP = 27;
+        // offset when scan stack
+        public const double Z_OFFSET = 20;
 
         // movement
         public const double MIN_TROLLEY_STOP_RANGE = 10;
