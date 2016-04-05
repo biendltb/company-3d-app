@@ -126,9 +126,13 @@ namespace TIS_3dAntiCollision.Services
             return measuredDataArr;
         }
 
-        public static List<Point3D> Parse3DPoints(double x_pos, double plane_angle, double[] scan_data)
+        public static Point3D[] Parse3DPoints(SingleScanData single_scan_data)
         {
             List<Point3D> list_3d_point = new List<Point3D>();
+
+            double x_pos = single_scan_data.XPos;
+            double plane_angle = single_scan_data.PlaneAngle;
+            double[] scan_data = single_scan_data.ScanData;
 
             double start_scan_angle = double.Parse(ConfigFileManager.ReadSensorStartAngle());
             double angle_resolution = double.Parse(ConfigFileManager.ReadSensorAngleResolution());
@@ -150,7 +154,17 @@ namespace TIS_3dAntiCollision.Services
                 list_3d_point.Add(point);
             }
 
-            return list_3d_point;
+            return list_3d_point.ToArray();
+        }
+
+        public static Point3D[] Parse3DPoints(SingleScanData[] single_scan_data_arr)
+        {
+            List<Point3D> list_3d_points = new List<Point3D>();
+
+            foreach (SingleScanData single_scan_data in single_scan_data_arr)
+                list_3d_points.AddRange(Parse3DPoints(single_scan_data));
+
+            return list_3d_points.ToArray();
         }
     }
 }

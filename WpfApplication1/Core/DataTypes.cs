@@ -34,6 +34,7 @@ namespace TIS_3dAntiCollision.Core
     {
         public double[] ScanData;
         public double XPos;
+        public double YPos;
         public double PlaneAngle;
     }
 

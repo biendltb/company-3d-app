@@ -49,24 +49,14 @@ namespace TIS_3dAntiCollision.UI
         {
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
-
-            Point3D[][] multi_scan_3d_point = new Point3D[multi_scan_data_list.Count][];
-
+            Point3D[] point_arr = SensorOutputParser.Parse3DPoints(multi_scan_data_list.ToArray());
             List<Point3D> list_point = new List<Point3D>();
-
-            for (int i = 0; i < multi_scan_data_list.Count; i++)
+                        
+            foreach (Point3D point in point_arr)
             {
-                multi_scan_3d_point[i] = SensorOutputParser.Parse3DPoints(multi_scan_data_list[i].XPos,
-                                                                            multi_scan_data_list[i].PlaneAngle,
-                                                                            multi_scan_data_list[i].ScanData).ToArray();
+                if (point.Z >= -300 && point.Z <= 300)
+                    list_point.Add(point);
             }
-
-            foreach (Point3D[] point_arr in multi_scan_3d_point)
-                foreach (Point3D point in point_arr)
-                {
-                    if (point.Z >= -300 && point.Z <= 300)
-                        list_point.Add(point);
-                }
             point_data = list_point.ToArray();
         }
 

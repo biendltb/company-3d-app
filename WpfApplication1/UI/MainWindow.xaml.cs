@@ -257,20 +257,10 @@ namespace TIS_3dAntiCollision.UI
             string file_path = @"../../ScanData/scan_data_1459767924.txt";
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
-            Point3D[][] multi_scan_3d_point = new Point3D[multi_scan_data_list.Count][];
 
-            List<Point3D> list_point = new List<Point3D>();
+            Point3D[] list_point;
 
-            for (int i = 0; i < multi_scan_data_list.Count; i++)
-            {
-                multi_scan_3d_point[i] = SensorOutputParser.Parse3DPoints(multi_scan_data_list[i].XPos,
-                                                                            multi_scan_data_list[i].PlaneAngle,
-                                                                            multi_scan_data_list[i].ScanData).ToArray();
-            }
-
-            foreach (Point3D[] point_arr in multi_scan_3d_point)
-                foreach (Point3D point in point_arr)
-                    list_point.Add(point);
+            list_point = SensorOutputParser.Parse3DPoints(multi_scan_data_list.ToArray());
 
              //profiling the middle container profile
             ContainerStackProfiler csp = new ContainerStackProfiler(list_point.ToArray());
