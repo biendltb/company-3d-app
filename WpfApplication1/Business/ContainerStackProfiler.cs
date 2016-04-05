@@ -158,7 +158,7 @@ namespace TIS_3dAntiCollision.Business
 
                 // find the highest horizontal line -> exchange x & y
                 KeyValuePair<double, int>[] lines = getLines(list_y_tmp.ToArray(), list_x_tmp.ToArray(),
-                    ConfigParameters.PROFILING_HORIZONTAL_LINE_THICKNESS, ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT, 
+                    ConfigParameters.PROFILING_HORIZONTAL_LINE_THICKNESS, ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT,
                     ConfigParameters.MERGE_LINE_DISTANCE);
 
                 double highest_stack = ConfigParameters.SENSOR_TO_GROUND_DISTANCE;
@@ -182,10 +182,9 @@ namespace TIS_3dAntiCollision.Business
                     if (z_count != 0)
                         list_obstacle_containers_pos.Add(new Point3D(list_x_pos_height[i].Key,
                             ConfigParameters.SENSOR_TO_GROUND_DISTANCE -
-                                (((Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_stack) / ConfigParameters.CONTAINER_HEIGHT)) - 1) 
+                                (((Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_stack) / ConfigParameters.CONTAINER_HEIGHT)) - 1)
                                 * ConfigParameters.CONTAINER_HEIGHT),
                                 sum_z_tmp / z_count));
-
                 }
             }
 

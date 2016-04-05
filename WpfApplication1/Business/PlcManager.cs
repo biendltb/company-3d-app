@@ -68,10 +68,15 @@ namespace TIS_3dAntiCollision.Business
         public void ReadStruct()
         {
             OnlineDataBlock = (DBStruct)plc.ReadStruct(typeof(DBStruct), ConfigParameters.DATA_BLOCK_NUMBER);
+
+            // invert Y direction
+            OnlineDataBlock.Y_post = ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post;
         }
 
         public string WriteStruct()
         {
+            OnlineDataBlock.Y_post = ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post;
+
             return plc.WriteStruct(OnlineDataBlock, ConfigParameters.DATA_BLOCK_NUMBER).ToString();
         }
 

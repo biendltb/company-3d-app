@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Business\Container.cs" />
     <Compile Include="Business\ContainerStackProfiler.cs" />
     <Compile Include="Business\MiniMotorManager.cs" />
     <Compile Include="Business\Scan3dCotroller.cs" />

@@ -301,8 +301,22 @@ namespace TIS_3dAntiCollision.UI
 
         private void MenuMotorItem_Click(object sender, RoutedEventArgs e)
         {
-            PlcManager.GetInstance.OnlineDataBlock.Start_swivel = true;
+            //// reset hoist
+            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = true;
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = false;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = false;
+            //PlcManager.GetInstance.WriteStruct();
+
+            // reset trolley
+            PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = true;
             PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            PlcManager.GetInstance.WriteStruct();
+            PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = false;
+            PlcManager.GetInstance.WriteStruct();
+            PlcManager.GetInstance.OnlineDataBlock.Remote = false;
             PlcManager.GetInstance.WriteStruct();
         }
 

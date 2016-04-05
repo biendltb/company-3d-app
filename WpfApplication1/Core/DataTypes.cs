@@ -12,7 +12,8 @@ namespace TIS_3dAntiCollision.Core
     {
         public bool Run_Bit;
         public bool Remote;
-        public bool Reset;
+        public bool Trolley_Position_Reset;
+        public bool Hoist_Position_Reset;
         public bool T_Forward_Slow;
         public bool T_Revert_Slow;
         public bool T_Forward_Stop;
