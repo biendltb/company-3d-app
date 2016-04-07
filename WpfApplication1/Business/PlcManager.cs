@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TIS_3dAntiCollision.Core;
 using TIS_3dAntiCollision.Core.PlcTypes;
+using System.Windows.Media.Media3D;
 
 namespace TIS_3dAntiCollision.Business
 {
@@ -68,15 +69,10 @@ namespace TIS_3dAntiCollision.Business
         public void ReadStruct()
         {
             OnlineDataBlock = (DBStruct)plc.ReadStruct(typeof(DBStruct), ConfigParameters.DATA_BLOCK_NUMBER);
-
-            // invert Y direction
-            OnlineDataBlock.Y_post = ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post;
         }
 
         public string WriteStruct()
         {
-            OnlineDataBlock.Y_post = ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post;
-
             return plc.WriteStruct(OnlineDataBlock, ConfigParameters.DATA_BLOCK_NUMBER).ToString();
         }
 
@@ -84,8 +80,22 @@ namespace TIS_3dAntiCollision.Business
         public void TriggerMiniMotor()
         {
             PlcManager.GetInstance.OnlineDataBlock.Start_swivel = true;
-            PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = true;
             PlcManager.GetInstance.WriteStruct();
+        }
+
+        public Point3D GetSensorPosition()
+        {
+            return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SENSOR_OFFSET_X,
+                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post,
+                ConfigParameters.SENSOR_OFFSET_Z);
+        }
+
+        public Point3D GetSpreaderPosition()
+        {
+            return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SPREADER_OFFSET_X,
+                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post + ConfigParameters.CONTAINER_HEIGHT,
+                ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2);
         }
         
     }

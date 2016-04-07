@@ -64,7 +64,7 @@ namespace TIS_3dAntiCollision.Business
             
             // find strongest vertical line
             KeyValuePair<double, int>[] lines = getLines(x_arr, y_arr, ConfigParameters.PROFILING_VERTICAL_LINE_THICKNESS,
-                                                            ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
+                                                            ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.PROFILING_MERGE_LINE_DISTANCE);
             KeyValuePair<double, int> top_line = new KeyValuePair<double, int>(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
                 ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
 
@@ -159,7 +159,7 @@ namespace TIS_3dAntiCollision.Business
                 // find the highest horizontal line -> exchange x & y
                 KeyValuePair<double, int>[] lines = getLines(list_y_tmp.ToArray(), list_x_tmp.ToArray(),
                     ConfigParameters.PROFILING_HORIZONTAL_LINE_THICKNESS, ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT,
-                    ConfigParameters.MERGE_LINE_DISTANCE);
+                    ConfigParameters.PROFILING_MERGE_LINE_DISTANCE);
 
                 double highest_stack = ConfigParameters.SENSOR_TO_GROUND_DISTANCE;
 
@@ -174,7 +174,7 @@ namespace TIS_3dAntiCollision.Business
                     double sum_z_tmp = 0;
                     int z_count = 0;
                     for (int j = 0; j < list_x_tmp.Count; j++)
-                        if (Math.Abs(list_y_tmp[j] - highest_stack) <= ConfigParameters.MERGE_LINE_DISTANCE / 2)
+                        if (Math.Abs(list_y_tmp[j] - highest_stack) <= ConfigParameters.PROFILING_MERGE_LINE_DISTANCE / 2)
                         {
                             sum_z_tmp += list_z_tmp[j];
                             z_count++;
@@ -221,7 +221,7 @@ namespace TIS_3dAntiCollision.Business
                     }
 
                 KeyValuePair<double, int>[] lines = getLines(list_y_tmp.ToArray(), list_x_tmp.ToArray(), ConfigParameters.PROFILING_HORIZONTAL_LINE_THICKNESS,
-                                            ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT, ConfigParameters.MERGE_LINE_DISTANCE);
+                                            ConfigParameters.PROFILING_HORIZONTAL_NUM_POINT_LIMIT, ConfigParameters.PROFILING_MERGE_LINE_DISTANCE);
 
                 double column_height = ConfigParameters.SENSOR_TO_GROUND_DISTANCE;
                 if (lines.Length > 0)
@@ -260,7 +260,6 @@ namespace TIS_3dAntiCollision.Business
                     foreach (Point3D obstacle_point in list_obstacle_containers_pos)
                         if (list_side_container_position[i].X == obstacle_point.X && list_side_container_position[i].Y == obstacle_point.Y)
                             list_side_container_position[i] = new Point3D(obstacle_point.X, obstacle_point.Y, obstacle_point.Z);
-
                 }
 
 

@@ -60,8 +60,8 @@
     </ApplicationDefinition>
     <Compile Include="Business\Container.cs" />
     <Compile Include="Business\ContainerStackProfiler.cs" />
-    <Compile Include="Business\MiniMotorManager.cs" />
-    <Compile Include="Business\Scan3dCotroller.cs" />
+    <Compile Include="Business\ProfileController.cs" />
+    <Compile Include="Business\Scan3dController.cs" />
     <Compile Include="Business\SinglePlaneScanController.cs" />
     <Compile Include="Business\SingleScanEncoder.cs" />
     <Compile Include="Business\ViewPortMouseActivity.cs" />

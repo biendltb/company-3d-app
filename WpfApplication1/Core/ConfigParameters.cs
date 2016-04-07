@@ -69,8 +69,19 @@ namespace TIS_3dAntiCollision.Core
         public const int PROFILING_VERTICAL_NUM_POINT_LIMIT = 3;
         public const int PROFILING_HORIZONTAL_LINE_THICKNESS = 3;
         public const int PROFILING_HORIZONTAL_NUM_POINT_LIMIT = 5;
-        public const int MERGE_LINE_DISTANCE = 10;
+        public const int PROFILING_MERGE_LINE_DISTANCE = 10;
         public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 72;
+
+        // SENSOR ANS SPREADER OFFSET SET UP
+        public const double SENSOR_OFFSET_X = 280;
+        public const double SENSOR_OFFSET_Y = 0;
+        public const double SENSOR_OFFSET_Z = 0;
+
+        public const double SPREADER_OFFSET_X = 130;
+        public const double SPREADER_OFFSET_Y = 0;
+        public const double SPREADER_OFFSET_Z = 0;
+        // set swing range of spreader and holded container
+        public const double SPREADER_SWING_RANGE = 40; //mm
 
     }
 }

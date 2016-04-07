@@ -34,7 +34,9 @@ namespace TIS_3dAntiCollision.Core
     public struct SingleScanData
     {
         public double[] ScanData;
+        // based x pos
         public double XPos;
+        // spreader y pos 
         public double YPos;
         public double PlaneAngle;
     }
@@ -44,5 +46,17 @@ namespace TIS_3dAntiCollision.Core
         Info,
         Warning,
         Error
+    }
+
+    public struct SingleLine
+    {
+        public double Value;
+        public int Score;
+
+        public SingleLine(double value, int score)
+        {
+            this.Value = value;
+            this.Score = score;
+        }
     }
 }

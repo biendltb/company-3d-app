@@ -52,7 +52,7 @@ namespace TIS_3dAntiCollision.Business
             {
                 // finish task
                 stopTrolley();
-                //Logger.Log("Stopped at: " + current_pos);
+                Logger.Log("Finish itinerary to destination " + des_pos + " with speed " + speed + ". Stop at: " + current_pos);
                 isOnMove = false;
                 return true;
             }

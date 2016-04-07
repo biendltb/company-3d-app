@@ -186,7 +186,8 @@ namespace TIS_3dAntiCollision.Business
 
             triangle_mesh.Positions.Add(container_position);
             triangle_mesh.Positions.Add(new Point3D(container_position.X, container_position.Y - ConfigParameters.CONTAINER_HEIGHT, container_position.Z));
-            triangle_mesh.Positions.Add(new Point3D(container_position.X + ConfigParameters.CONTAINER_WIDTH, container_position.Y - ConfigParameters.CONTAINER_HEIGHT, container_position.Z));
+            triangle_mesh.Positions.Add(new Point3D(container_position.X + ConfigParameters.CONTAINER_WIDTH, 
+                                        container_position.Y - ConfigParameters.CONTAINER_HEIGHT, container_position.Z));
             triangle_mesh.Positions.Add(new Point3D(container_position.X + ConfigParameters.CONTAINER_WIDTH, container_position.Y, container_position.Z));
 
             triangle_mesh.Positions.Add(new Point3D(container_position.X, container_position.Y,

@@ -19,6 +19,7 @@ namespace TIS_3dAntiCollision.Services
             {
                 // 1st and 2nd element will contains the x pos and plane angle
                 result += single_scan_data.XPos + scan_data_splitter.ToString();
+                result += single_scan_data.YPos + scan_data_splitter.ToString();
                 result += single_scan_data.PlaneAngle + scan_data_splitter.ToString();
 
                 // add scan data next to
@@ -48,10 +49,11 @@ namespace TIS_3dAntiCollision.Services
 
                     // get x pos and plane angle
                     single_scan_data.XPos = double.Parse(scan_data_arr[0]);
-                    single_scan_data.PlaneAngle = double.Parse(scan_data_arr[1]);
+                    single_scan_data.YPos = double.Parse(scan_data_arr[1]);
+                    single_scan_data.PlaneAngle = double.Parse(scan_data_arr[2]);
                     
                     // collect the scan data
-                    for (int i = 2; i < scan_data_arr.Length; i++)
+                    for (int i = 3; i < scan_data_arr.Length; i++)
                         if (scan_data_arr[i] != "")
                             scan_data_list.Add(double.Parse(scan_data_arr[i]));
 

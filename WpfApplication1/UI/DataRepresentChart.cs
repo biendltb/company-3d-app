@@ -38,8 +38,8 @@ namespace TIS_3dAntiCollision.UI
 
             ContainerStackProfiler csp = new ContainerStackProfiler(points);
 
-            Point3D[] result_points1 = csp.GetMiddleStackProfile();
-            Point3D[] result_points = csp.GetSideStackProfile(true);
+            Point3D[] result_points = csp.GetMiddleStackProfile();
+            //Point3D[] result_points = csp.GetSideStackProfile(true);
 
             foreach (Point3D point in result_points)
                 chart1.Series["Series1"].Points.AddXY(point.X, point.Y);

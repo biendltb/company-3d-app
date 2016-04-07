@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TIS_3dAntiCollision.Core;
 using System.Windows.Media.Media3D;
+using TIS_3dAntiCollision.Business;
 
 namespace TIS_3dAntiCollision.Services
 {
@@ -139,10 +140,33 @@ namespace TIS_3dAntiCollision.Services
 
             double plane_angle_rad = plane_angle * Math.PI / 180;
 
+            // calculate the start and end angle
+            double start_spreader_range_angle = Math.Atan((single_scan_data.XPos + ConfigParameters.SENSOR_OFFSET_X
+                                                        - (single_scan_data.XPos + ConfigParameters.SPREADER_OFFSET_X + ConfigParameters.CONTAINER_WIDTH
+                                                            + ConfigParameters.SPREADER_SWING_RANGE)) / single_scan_data.YPos) / Math.PI * 180 + 90;
+
+            double end_spreader_range_angle = Math.Atan((single_scan_data.XPos + ConfigParameters.SENSOR_OFFSET_X
+                                                        - (single_scan_data.XPos + ConfigParameters.SPREADER_OFFSET_X - ConfigParameters.SPREADER_SWING_RANGE)) //rate
+                                                        / (single_scan_data.YPos - ConfigParameters.CONTAINER_HEIGHT)) / Math.PI * 180 + 90;
+
+            double spreader_angle_range = (end_spreader_range_angle - start_spreader_range_angle);
+
+            bool isRemoveSpreader = false;
+
+            if (Math.Abs((1 / Math.Tan(plane_angle_rad)) * (single_scan_data.YPos - ConfigParameters.CONTAINER_HEIGHT))
+                < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.SPREADER_SWING_RANGE)
+                isRemoveSpreader = true;
+            
             for (int i = 0; i < scan_data.Length; i++)
             {
                 Point3D point = new Point3D();
-                double beam_angle_rad = (start_scan_angle + i * angle_resolution) * Math.PI / 180;
+                double beam_angle_deg = start_scan_angle + i * angle_resolution;
+
+                // skip if in spreader range
+                if (beam_angle_deg >= start_spreader_range_angle && beam_angle_deg <= (start_spreader_range_angle + spreader_angle_range) && isRemoveSpreader)
+                    continue;
+
+                double beam_angle_rad = beam_angle_deg * Math.PI / 180;
 
                 // change the angle
                 //plane_angle_rad -= Math.PI;

@@ -174,7 +174,7 @@ namespace TIS_3dAntiCollision.UI
         private void scan_btn_Click(object sender, RoutedEventArgs e)
         {
             //(new Scan()).Show();
-            MiniMotorManager.GetInstance().Trigger();
+            Scan3dController.GetInstance().Trigger();
         }
 
         void move_to_btn_Click(object sender, RoutedEventArgs e)
@@ -214,9 +214,7 @@ namespace TIS_3dAntiCollision.UI
             tb_y_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.Y_post, 2).ToString();
 
             // update spreader display position
-            vpm.DisplaySpreader(new Point3D(PlcManager.GetInstance.OnlineDataBlock.X_post,
-                PlcManager.GetInstance.OnlineDataBlock.Y_post,
-                ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2), true);
+            vpm.DisplaySpreader(PlcManager.GetInstance.GetSpreaderPosition(), true);
 
             // update light indicator
             string led_red_key = "led_red";
@@ -254,13 +252,11 @@ namespace TIS_3dAntiCollision.UI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             //scan_data_1457689858
-            string file_path = @"../../ScanData/scan_data_1459767924.txt";
+            string file_path = @"../../ScanData/scan_data_1459942184.txt";
             string data_file_content = DataStorageManager.ReadScanData(file_path);
             List<SingleScanData> multi_scan_data_list = ScanDataEncoder.Decode(data_file_content);
 
-            Point3D[] list_point;
-
-            list_point = SensorOutputParser.Parse3DPoints(multi_scan_data_list.ToArray());
+            Point3D[] list_point = SensorOutputParser.Parse3DPoints(multi_scan_data_list.ToArray());
 
              //profiling the middle container profile
             ContainerStackProfiler csp = new ContainerStackProfiler(list_point.ToArray());
@@ -311,19 +307,22 @@ namespace TIS_3dAntiCollision.UI
             //PlcManager.GetInstance.WriteStruct();
 
             // reset trolley
-            PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = true;
-            PlcManager.GetInstance.OnlineDataBlock.Remote = true;
-            PlcManager.GetInstance.WriteStruct();
-            PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = false;
-            PlcManager.GetInstance.WriteStruct();
-            PlcManager.GetInstance.OnlineDataBlock.Remote = false;
-            PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = true;
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = false;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = false;
+            //PlcManager.GetInstance.WriteStruct();
+
+            //PlcManager.GetInstance.OnlineDataBlock.H_SetPoint = 0;
+            //PlcManager.GetInstance.WriteStruct();
         }
 
         private void MenuItem_Test3DScan_Click(object sender, RoutedEventArgs e)
         {
             // trigger mini motor to start scan
-            MiniMotorManager.GetInstance().Trigger();
+            Scan3dController.GetInstance().Trigger();
         }
     }
 }
