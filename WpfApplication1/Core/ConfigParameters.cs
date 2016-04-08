@@ -20,6 +20,7 @@ namespace TIS_3dAntiCollision.Core
         // Timer interval (ms)
         public const int TIMER_INTERVAL = 10;
         public const int SCAN_TIMER_INTERVAL = 625;
+        public const int RESET_SENSOR_POS_DELAY_INTERVAL = 3500;
 
         // Configuration file path
         public const string CONFIG_FILE_PATH = @"..\..\dvconf.ini";
@@ -71,6 +72,7 @@ namespace TIS_3dAntiCollision.Core
         public const int PROFILING_HORIZONTAL_NUM_POINT_LIMIT = 5;
         public const int PROFILING_MERGE_LINE_DISTANCE = 10;
         public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 72;
+        public const int PROFILING_MAX_V_BASE_LINE_DEVIATION = 10;
 
         // SENSOR ANS SPREADER OFFSET SET UP
         public const double SENSOR_OFFSET_X = 280;

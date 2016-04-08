@@ -11,6 +11,7 @@ namespace TIS_3dAntiCollision.Business.DAO
         public Point3D Position
         {
             get { return position; }
+            set { position = value; }
         }
         // length of container (20 or 40 feet)
         private double length = ConfigParameters.TWENTY_FEET_CONTAINER_LENGTH;
@@ -25,6 +26,7 @@ namespace TIS_3dAntiCollision.Business.DAO
         public int Score
         {
             get { return score; }
+            set { score = value; }
         }
 
         public Container(Point3D position, double length, int score)

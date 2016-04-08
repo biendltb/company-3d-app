@@ -3,6 +3,8 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using System;
 using TIS_3dAntiCollision.Core;
+using TIS_3dAntiCollision.Business.DAO;
+using System.Collections.Generic;
 
 namespace TIS_3dAntiCollision.Business
 {
@@ -29,6 +31,9 @@ namespace TIS_3dAntiCollision.Business
         // LIGHT PARAMS
         private Color light_color = Colors.White;
         private Vector3D light_direction = new Vector3D(600, 1300, 100);
+
+        // CONTAINERS
+        List<int> container_indexes = new List<int>();
 
         private int index_of_spreader = -1;
 
@@ -61,8 +66,7 @@ namespace TIS_3dAntiCollision.Business
         {
             view_port.Camera = Camera;
 
-            model_group.Children.Add(directional_light);
-            model_group.Children.Add(new AmbientLight(Colors.DimGray));
+            resetModelGroup();
 
             model_visual.Content = model_group;
 
@@ -72,11 +76,39 @@ namespace TIS_3dAntiCollision.Business
             createLineNet(model_group);
         }
 
+        private void resetModelGroup()
+        {
+            model_group.Children.Clear();
+            model_group.Children.Add(directional_light);
+            model_group.Children.Add(new AmbientLight(Colors.DimGray));
+
+            index_of_spreader = -1;
+        }
+
         public void DisplayContainerStack(Point3D[] stack_container_position, double container_length)
         {
             // add container stack to view
             foreach (Point3D point in stack_container_position)
                 model_group.Children.Add(getContainer(point, container_length, getContainerColor(point.Y)));
+        }
+
+        public void DisplayContainerStack(Container[] containers)
+        {
+            // remove all the old container
+            //foreach (int i in container_indexes)
+            //    model_group.Children.RemoveAt(i);
+
+            //container_indexes.Clear();
+
+            // add new containers and index them
+            foreach (Container m_container in containers)
+            {
+                GeometryModel3D container_model = getContainer(m_container.Position, m_container.Length, getContainerColor(m_container.Position.Y));
+                model_group.Children.Add(container_model);
+                // store index
+                //container_indexes.Add(model_group.Children.IndexOf(container_model));
+            }
+
         }
 
         public void DisplaySpreader(Point3D spreader_position, bool isHoldingContainer)

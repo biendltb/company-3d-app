@@ -12,7 +12,14 @@ namespace TIS_3dAntiCollision.Business
     {
         static readonly ProfileController pc = new ProfileController();
 
-        private Profile profile = new Container[0];
+        private Profile profile = new Profile();
+
+        internal Profile Profile
+        {
+            get { return profile; }
+        }
+
+        public bool IsNewProfileUpdate = false;
 
         private SingleLine vertical_base_line = new SingleLine(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
                                                                 ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
@@ -25,9 +32,9 @@ namespace TIS_3dAntiCollision.Business
         static ProfileController() { }
         ProfileController(){}
 
-        public static ProfileController GetInstance()
+        public static ProfileController GetInstance
         {
-            return pc;
+            get { return pc; }
         }
 
         public void UpdateProfile(SingleScanData[] scan_data)
@@ -39,35 +46,73 @@ namespace TIS_3dAntiCollision.Business
 
             Profile new_profile = getProfile(points);
 
-            // update old profile
-            // if new profile has stronger vertical base line, replace the old controller
+            // Update old profile
+            // If new profile has stronger vertical base line and out of base line deviation limit, replace all containers
+            // If new profile base line is in the base line deviation limit with the old one, update all container:
+            // - Visit all container in the new profile
+            // - Find its position in the old profile
+            // -- If it's existed: update the score only
+            // -- If it's inexist: add that container to old profile
+            if (Math.Abs(new_profile.VerticalBaseLine.Value - profile.VerticalBaseLine.Value) > ConfigParameters.PROFILING_MAX_V_BASE_LINE_DEVIATION)
+            {
+                if (new_profile.VerticalBaseLine.Score > profile.VerticalBaseLine.Score)
+                    // replace all containers according to the new profile
+                    profile = new_profile;
+            }
+            else
+            {
+                // update containers in old profile
+                foreach (Container m_container in new_profile.ProfileContainers)
+                {
+                    bool isFound = false;
+                    // find its position in the old profile
+                    for (int i = 0; i < profile.ProfileContainers.Count; i++)
+                        if (Math.Abs(m_container.Position.X - profile.ProfileContainers[i].Position.X) <= ConfigParameters.PROFILING_MAX_V_BASE_LINE_DEVIATION
+                            && Math.Abs(m_container.Position.Y - profile.ProfileContainers[i].Position.Y) <= ConfigParameters.PROFILING_MAX_V_BASE_LINE_DEVIATION)
+                        {
+                            // update the z and the score if the new container score is higher
+                            if (m_container.Score > profile.ProfileContainers[i].Score)
+                            {
+                                profile.ProfileContainers[i].Position = new Point3D(profile.ProfileContainers[i].Position.X,
+                                                                                    profile.ProfileContainers[i].Position.Y,
+                                                                                    m_container.Position.Z);
+                                profile.ProfileContainers[i].Score = m_container.Score;
+                            }
 
+                            isFound = true;
+                            break;
+                        }
+
+                    // if not found, add container to the new profile
+                    if (!isFound)
+                        profile.ProfileContainers.Add(m_container);
+                }
+            }
+
+            // mark that there is an available profile update
+            IsNewProfileUpdate = true;
         }
 
         private Profile getProfile(Point3D[] points)
         {
 
             //collect profile
-            Container[] middle_stack_profile = getMiddleStackProfile(points);
-            Container[] left_stack_profile = getSideStackProfile(points, false);
-            Container[] right_stack_profile = getSideStackProfile(points, true);
+            List<Container> middle_stack_profile = getMiddleStackProfile(points);
+            List<Container> left_stack_profile = getSideStackProfile(points, false);
+            List<Container> right_stack_profile = getSideStackProfile(points, true);
 
-            Container[] profile_containers = new Container[middle_stack_profile.Length 
-                                    + left_stack_profile.Length 
-                                    + right_stack_profile.Length];
+            List<Container> profile_containers = new List<Container>();
 
-            middle_stack_profile.CopyTo(profile_containers, 0);
-            left_stack_profile.CopyTo(profile_containers, middle_stack_profile.Length);
-            right_stack_profile.CopyTo(profile_containers, middle_stack_profile.Length + left_stack_profile.Length);
-
+            profile_containers.AddRange(middle_stack_profile);
+            profile_containers.AddRange(left_stack_profile);
+            profile_containers.AddRange(right_stack_profile);
 
             Profile m_profile = new Profile(vertical_base_line, profile_containers);
 
             return m_profile;
-            
         }
 
-        private Container[] getMiddleStackProfile(Point3D[] points)
+        private List<Container> getMiddleStackProfile(Point3D[] points)
         {
             // Idea:
             // 1) Collect all point inside the middle section of middle container stack
@@ -166,10 +211,10 @@ namespace TIS_3dAntiCollision.Business
 
             middle_stack_col_heights = col_heights.ToArray();
 
-            return middle_stack_containers.ToArray();
+            return middle_stack_containers;
         }
 
-        private Container[] getSideStackProfile(Point3D[] points, bool isRight)
+        private List<Container> getSideStackProfile(Point3D[] points, bool isRight)
         {
             // Idea:
             // 1) Collect all points in overlap range in middle container stack
@@ -245,13 +290,12 @@ namespace TIS_3dAntiCollision.Business
                     {
                         Container m_container = new Container(new Point3D(col_height_point.X,
                                                                 ConfigParameters.SENSOR_TO_GROUND_DISTANCE -
-                                                                    (((Math.Round(ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT)) - 1)
+                                                                    (((Math.Round(ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_line.Value) 
+                                                                    / ConfigParameters.CONTAINER_HEIGHT)) - 1)
                                                                     * ConfigParameters.CONTAINER_HEIGHT, sum_z_tmp / z_count),
                                                                 isRight? ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH
                                                                         : ConfigParameters.LEFT_STACK_CONTAINER_LENGTH,
                                                                 highest_line.Score);
-
-
 
                         overlap_containers.Add(m_container);
                     }
@@ -308,10 +352,12 @@ namespace TIS_3dAntiCollision.Business
                 {
                     Container m_container = new Container(new Point3D(start_column_x,
                                                                         ConfigParameters.SENSOR_TO_GROUND_DISTANCE - (i * ConfigParameters.CONTAINER_HEIGHT),
-                                                                        isRight? - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                                                                        isRight? - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 
+                                                                            - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
                                                                         : ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
                                                                             + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH), 
-                                                                        ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH,
+                                                                        isRight? ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH:
+                                                                        ConfigParameters.LEFT_STACK_CONTAINER_LENGTH,
                                                                         col_highest_line.Score);
                     side_stack_containers.Add(m_container);
                 }
@@ -333,9 +379,8 @@ namespace TIS_3dAntiCollision.Business
                                                                                 m_container.Score);
 
 
-            return side_stack_containers.ToArray();
+            return side_stack_containers;
         }
-
 
 
         /// <summary>

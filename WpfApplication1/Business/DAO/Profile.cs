@@ -1,4 +1,5 @@
 ﻿using TIS_3dAntiCollision.Core;
+using System.Collections.Generic;
 
 namespace TIS_3dAntiCollision.Business.DAO
 {
@@ -12,15 +13,20 @@ namespace TIS_3dAntiCollision.Business.DAO
             get { return vertical_base_line; }
         }
 
-        private Container[] profile_containers = new Container[0];
+        private List<Container> profile_containers = new List<Container>();
 
-        internal Container[] ProfileContainers
+        internal List<Container> ProfileContainers
         {
             get { return profile_containers; }
             set { profile_containers = value; }
         }
 
-        public Profile(SingleLine v_base_line, Container[] profile_containers)
+        public Profile()
+        {
+            // TODO: Complete member initialization
+        }
+
+        public Profile(SingleLine v_base_line, List<Container> profile_containers)
         {
             this.vertical_base_line = v_base_line;
             this.profile_containers = profile_containers;

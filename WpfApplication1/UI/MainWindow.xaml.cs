@@ -41,6 +41,10 @@ namespace TIS_3dAntiCollision.UI
         // the timer for calculate the scan angle
         DispatcherTimer scan_timer = new DispatcherTimer();
 
+        // turn on auto-profiling mode
+        private bool isProfileMode = false;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -112,9 +116,6 @@ namespace TIS_3dAntiCollision.UI
 
             if (lb_log.Items.Count > ConfigParameters.NUM_LOG_ON_MEMORY_LIMIT)
                 lb_log.Items.RemoveAt(0);
-
-            //if (lb_log.Items.Count > 0)
-            //    lb_log.ScrollIntoView(lb_log.Items[lb_log.Items.Count - 1]);
         }
 
         private void m_plc_timer_Tick(object sender, EventArgs e)
@@ -127,7 +128,20 @@ namespace TIS_3dAntiCollision.UI
             MovementController.Execute();
 
             // excute scan command
-            SinglePlaneScanController.Excute();
+            //SinglePlaneScanController.Excute();
+
+            // execute scan 3d controller
+            if (PlcManager.GetInstance.IsConnect && SensorManger.GetInstance.IsConnect && isProfileMode)
+                Scan3dController.GetInstance.Trigger();
+
+            // update view port if there is any new update and reset update checker flag
+            if (ProfileController.GetInstance.IsNewProfileUpdate)
+            {
+                vpm.DisplayContainerStack(ProfileController.GetInstance.Profile.ProfileContainers.ToArray());
+                ProfileController.GetInstance.IsNewProfileUpdate = false;
+                Logger.Log("Profile is successfully updated.");
+            }
+
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)
@@ -174,7 +188,17 @@ namespace TIS_3dAntiCollision.UI
         private void scan_btn_Click(object sender, RoutedEventArgs e)
         {
             //(new Scan()).Show();
-            Scan3dController.GetInstance().Trigger();
+            //Scan3dController.GetInstance.Trigger();
+            if (!isProfileMode)
+            {
+                WindowContentManager.ActiveScanBtn(scan_btn);
+                isProfileMode = true;
+            }
+            else
+            {
+                WindowContentManager.DeactiveScanBtn(scan_btn);
+                isProfileMode = false;
+            }
         }
 
         void move_to_btn_Click(object sender, RoutedEventArgs e)
@@ -322,7 +346,7 @@ namespace TIS_3dAntiCollision.UI
         private void MenuItem_Test3DScan_Click(object sender, RoutedEventArgs e)
         {
             // trigger mini motor to start scan
-            Scan3dController.GetInstance().Trigger();
+            //Scan3dController.GetInstance.Trigger();
         }
     }
 }
