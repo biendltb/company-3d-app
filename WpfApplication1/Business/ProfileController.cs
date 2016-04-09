@@ -4,7 +4,7 @@ using System.Windows.Media.Media3D;
 using TIS_3dAntiCollision.Services;
 using System;
 using System.Windows;
-using TIS_3dAntiCollision.Business.DAO;
+using TIS_3dAntiCollision.Model.DAO;
 
 namespace TIS_3dAntiCollision.Business
 {
@@ -24,12 +24,7 @@ namespace TIS_3dAntiCollision.Business
         private SingleLine vertical_base_line = new SingleLine(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
                                                                 ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
 
-        // save height of all column in the middle
-        // X - start column position x
-        // Y - height of column
-        private Point[] middle_stack_col_heights;
-
-        static ProfileController() { }
+        static ProfileController() {}
         ProfileController(){}
 
         public static ProfileController GetInstance
@@ -46,48 +41,7 @@ namespace TIS_3dAntiCollision.Business
 
             Profile new_profile = getProfile(points);
 
-            // Update old profile
-            // If new profile has stronger vertical base line and out of base line deviation limit, replace all containers
-            // If new profile base line is in the base line deviation limit with the old one, update all container:
-            // - Visit all container in the new profile
-            // - Find its position in the old profile
-            // -- If it's existed: update the score only
-            // -- If it's inexist: add that container to old profile
-            if (Math.Abs(new_profile.VerticalBaseLine.Value - profile.VerticalBaseLine.Value) > ConfigParameters.PROFILING_MAX_V_BASE_LINE_DEVIATION)
-            {
-                if (new_profile.VerticalBaseLine.Score > profile.VerticalBaseLine.Score)
-                    // replace all containers according to the new profile
-                    profile = new_profile;
-            }
-            else
-            {
-                // update containers in old profile
-                foreach (Container m_container in new_profile.ProfileContainers)
-                {
-                    bool isFound = false;
-                    // find its position in the old profile
-                    for (int i = 0; i < profile.ProfileContainers.Count; i++)
-                        if (Math.Abs(m_container.Position.X - profile.ProfileContainers[i].Position.X) <= ConfigParameters.PROFILING_MAX_V_BASE_LINE_DEVIATION
-                            && Math.Abs(m_container.Position.Y - profile.ProfileContainers[i].Position.Y) <= ConfigParameters.PROFILING_MAX_V_BASE_LINE_DEVIATION)
-                        {
-                            // update the z and the score if the new container score is higher
-                            if (m_container.Score > profile.ProfileContainers[i].Score)
-                            {
-                                profile.ProfileContainers[i].Position = new Point3D(profile.ProfileContainers[i].Position.X,
-                                                                                    profile.ProfileContainers[i].Position.Y,
-                                                                                    m_container.Position.Z);
-                                profile.ProfileContainers[i].Score = m_container.Score;
-                            }
-
-                            isFound = true;
-                            break;
-                        }
-
-                    // if not found, add container to the new profile
-                    if (!isFound)
-                        profile.ProfileContainers.Add(m_container);
-                }
-            }
+            this.profile.UpdateProfile(new_profile);
 
             // mark that there is an available profile update
             IsNewProfileUpdate = true;
@@ -95,37 +49,36 @@ namespace TIS_3dAntiCollision.Business
 
         private Profile getProfile(Point3D[] points)
         {
-
             //collect profile
-            List<Container> middle_stack_profile = getMiddleStackProfile(points);
-            List<Container> left_stack_profile = getSideStackProfile(points, false);
-            List<Container> right_stack_profile = getSideStackProfile(points, true);
+            Stack middle_stack = getMiddleStackProfile(points);
+            Stack left_stack = getSideStackProfile(points, middle_stack, false);
+            Stack right_stack = getSideStackProfile(points, middle_stack, true);
 
-            List<Container> profile_containers = new List<Container>();
+            List<Stack> stacks = new List<Stack>();
+            stacks.Add(left_stack);
+            stacks.Add(middle_stack);
+            stacks.Add(right_stack);
 
-            profile_containers.AddRange(middle_stack_profile);
-            profile_containers.AddRange(left_stack_profile);
-            profile_containers.AddRange(right_stack_profile);
-
-            Profile m_profile = new Profile(vertical_base_line, profile_containers);
+            Profile m_profile = new Profile(vertical_base_line, stacks);
 
             return m_profile;
         }
 
-        private List<Container> getMiddleStackProfile(Point3D[] points)
+        private Stack getMiddleStackProfile(Point3D[] points)
         {
             // Idea:
             // 1) Collect all point inside the middle section of middle container stack
             // 2) Get the strongest vertical line and set it as vertical base line if it meets the criterion
-            // 3) Devide middle stack points according to x value of every sections calculated base on 
+            // 3) Devide middle stack points according to x value of every columns calculated base on 
             // the vertical base line and container column width
-            // 4) Get the highest line in every section and create the container data
+            // 4) Initial empty columns and add to list column
+            // 5) Get the number of container in each column and the score of column
+            //    Update in list empty columns
 
-            List<Container> middle_stack_containers = new List<Container>();
+            List<Column> middle_columns = new List<Column>();
             List<Point3D> middle_stack_points = new List<Point3D>();
             List<Point3D> vertical_points = new List<Point3D>();
             List<Point3D> horizontal_points = new List<Point3D>();
-            List<Point> col_heights = new List<Point>();
 
             // filter points in middle z range of middle container stack
             foreach (Point3D point in points)
@@ -191,30 +144,18 @@ namespace TIS_3dAntiCollision.Business
                 if (h_lines.Length > 0)
                     col_highest_line = h_lines[0];
 
-                byte level = (byte)Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - col_highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT);
+                int quantity = (int)Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - col_highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT);
 
-                col_heights.Add(new Point(start_column_x, level * ConfigParameters.CONTAINER_HEIGHT));
-
-                // create container and add to middle container stack profile
-                for (int i = 0; i < level; i++)
-                {
-                    Container m_container = new Container(new Point3D(start_column_x,
-                                                                        ConfigParameters.SENSOR_TO_GROUND_DISTANCE - (i * ConfigParameters.CONTAINER_HEIGHT),
-                                                                        ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2), ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH,
-                                                                        col_highest_line.Score);
-                    middle_stack_containers.Add(m_container);
-                }
+                middle_columns.Add(new Column(quantity, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2, col_highest_line.Score));
 
                 // move to next column
                 start_column_x += container_column_width;
             }
 
-            middle_stack_col_heights = col_heights.ToArray();
-
-            return middle_stack_containers;
+            return new Stack(middle_columns);
         }
 
-        private List<Container> getSideStackProfile(Point3D[] points, bool isRight)
+        private Stack getSideStackProfile(Point3D[] _points, Stack _middle_stack, bool _isRight)
         {
             // Idea:
             // 1) Collect all points in overlap range in middle container stack
@@ -223,28 +164,28 @@ namespace TIS_3dAntiCollision.Business
             // 4) Compare to middle stack list column height to detect the overlap container
             // 5) Save overlap container information
 
-            List<Container> side_stack_containers = new List<Container>();
-            List<Container> overlap_containers = new List<Container>();
+            List<Column> overlap_cols = new List<Column>();
+            List<Column> side_stack_cols = new List<Column>();
             List<Point3D> side_stack_points = new List<Point3D>();
             List<Point3D> overlap_range_points = new List<Point3D>();
 
             // filter to get all point in the overlap range
-            if (!isRight)
+            if (!_isRight)
             {
-                foreach (Point3D point in points)
+                foreach (Point3D point in _points)
                     if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.Z_OFFSET)
                         overlap_range_points.Add(point);
             }
             else
             {
-                foreach (Point3D point in points)
+                foreach (Point3D point in _points)
                     if (point.Z < -ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z > -ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.Z_OFFSET)
                         overlap_range_points.Add(point);
             }
 
             double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
 
-            foreach(Point col_height_point in middle_stack_col_heights)
+            for (int i = 0; i < _middle_stack.Columns.Count; i++)
             {
                 // find the highest line from points
                 // get the point in range
@@ -254,7 +195,7 @@ namespace TIS_3dAntiCollision.Business
 
                 // collect all points within column range
                 foreach (Point3D point in overlap_range_points)
-                    if (point.X >= col_height_point.X && point.X < col_height_point.X + container_column_width)
+                    if (point.X >= i * container_column_width && point.X < (i + 1) * container_column_width)
                     {
                         list_x_tmp.Add(point.X);
                         list_y_tmp.Add(point.Y);
@@ -273,8 +214,11 @@ namespace TIS_3dAntiCollision.Business
                     if (l.Value < highest_line.Value)
                         highest_line = new SingleLine(l.Value, l.Score);
 
+                // add empty column to list overlap column
+                overlap_cols.Add(new Column());
+
                 // compare to middle stack profile
-                if (Math.Abs(highest_line.Value - col_height_point.Y) > ConfigParameters.CONTAINER_HEIGHT / 3)
+                if (Math.Abs(highest_line.Value - _middle_stack.Columns[i].Quantity * ConfigParameters.CONTAINER_HEIGHT) > ConfigParameters.CONTAINER_HEIGHT / 3)
                 // detect and collect the overlap container
                 {
                     double sum_z_tmp = 0;
@@ -287,35 +231,27 @@ namespace TIS_3dAntiCollision.Business
                             z_count++;
                         }
                     if (z_count != 0)
-                    {
-                        Container m_container = new Container(new Point3D(col_height_point.X,
-                                                                ConfigParameters.SENSOR_TO_GROUND_DISTANCE -
-                                                                    (((Math.Round(ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_line.Value) 
-                                                                    / ConfigParameters.CONTAINER_HEIGHT)) - 1)
-                                                                    * ConfigParameters.CONTAINER_HEIGHT, sum_z_tmp / z_count),
-                                                                isRight? ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH
-                                                                        : ConfigParameters.LEFT_STACK_CONTAINER_LENGTH,
-                                                                highest_line.Score);
-
-                        overlap_containers.Add(m_container);
-                    }
+                        overlap_cols[i] = new Column((int)((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT) + 1,
+                                                        _isRight ? sum_z_tmp / z_count
+                                                        : sum_z_tmp / z_count + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH, 
+                                                        highest_line.Score);
                 }
             }
 
+            //--- SIDE STACK PROFILING
 
-            // Based on the vertical based line to profile of side container stack
             double start_side_stack_z = ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK;
 
             // collect the point of side container stack based on Z
-            if (!isRight)
+            if (!_isRight)
             {
-                foreach (Point3D point in points)
+                foreach (Point3D point in _points)
                     if (point.Z >= start_side_stack_z && point.Z <= start_side_stack_z + ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH)
                         side_stack_points.Add(point);
             }
             else
             {
-                foreach (Point3D point in points)
+                foreach (Point3D point in _points)
                     if (point.Z <= -start_side_stack_z && point.Z >= -(start_side_stack_z + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH))
                         side_stack_points.Add(point);
             }
@@ -345,41 +281,30 @@ namespace TIS_3dAntiCollision.Business
                 if (h_lines.Length > 0)
                     col_highest_line = h_lines[0];
 
-                byte level = (byte)Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - col_highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT);
+                int quantity = (int)Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - col_highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT);
 
-                // add point to list
-                for (int i = 0; i < level; i++)
-                {
-                    Container m_container = new Container(new Point3D(start_column_x,
-                                                                        ConfigParameters.SENSOR_TO_GROUND_DISTANCE - (i * ConfigParameters.CONTAINER_HEIGHT),
-                                                                        isRight? - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 
-                                                                            - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
-                                                                        : ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
-                                                                            + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH), 
-                                                                        isRight? ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH:
-                                                                        ConfigParameters.LEFT_STACK_CONTAINER_LENGTH,
-                                                                        col_highest_line.Score);
-                    side_stack_containers.Add(m_container);
-                }
+                side_stack_cols.Add(new Column(quantity, 
+                                                _isRight? - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 
+                                                            - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                                                        : ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                                                            + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH,
+                                                col_highest_line.Score));
 
                 // move to next column
                 start_column_x += container_column_width;
             }
 
             // Update overlap containers in side stack containers
-            for (int i = 0; i < side_stack_containers.Count; i++)
-                foreach (Container m_container in overlap_containers)
-                    if (m_container.Position.X == side_stack_containers[i].Position.X &&
-                        m_container.Position.Y == side_stack_containers[i].Position.Y)
-                        side_stack_containers[i] = new Container(new Point3D(m_container.Position.X,
-                                                                                m_container.Position.Y,
-                                                                                isRight ? m_container.Position.Z
-                                                                                    : m_container.Position.Z + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH),
-                                                                                m_container.Length,
-                                                                                m_container.Score);
+            for (int i = 0; i < side_stack_cols.Count; i++)
+                // if same container quantity in same slot
+                if (overlap_cols[i].Quantity == side_stack_cols[i].Quantity)
+                    // update the z position of the top container
+                    side_stack_cols[i] = new Column(side_stack_cols[i].Quantity,
+                                                    overlap_cols[i].ZPos,
+                                                    overlap_cols[i].Score);
 
 
-            return side_stack_containers;
+            return new Stack(side_stack_cols);
         }
 
 

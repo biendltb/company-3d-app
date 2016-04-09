@@ -3,8 +3,8 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using System;
 using TIS_3dAntiCollision.Core;
-using TIS_3dAntiCollision.Business.DAO;
 using System.Collections.Generic;
+using TIS_3dAntiCollision.Model.DAO;
 
 namespace TIS_3dAntiCollision.Business
 {

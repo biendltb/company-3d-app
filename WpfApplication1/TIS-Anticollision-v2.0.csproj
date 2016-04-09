@@ -58,9 +58,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Business\DAO\Container.cs" />
+    <Compile Include="Model\DAO\Column.cs" />
+    <Compile Include="Model\DAO\Container.cs" />
     <Compile Include="Business\ContainerStackProfiler.cs" />
-    <Compile Include="Business\DAO\Profile.cs" />
+    <Compile Include="Model\DAO\Profile.cs" />
+    <Compile Include="Model\DAO\Stack.cs" />
     <Compile Include="Business\ProfileController.cs" />
     <Compile Include="Business\Scan3dController.cs" />
     <Compile Include="Business\SinglePlaneScanController.cs" />

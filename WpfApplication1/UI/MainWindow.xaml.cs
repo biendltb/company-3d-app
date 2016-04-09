@@ -137,7 +137,7 @@ namespace TIS_3dAntiCollision.UI
             // update view port if there is any new update and reset update checker flag
             if (ProfileController.GetInstance.IsNewProfileUpdate)
             {
-                vpm.DisplayContainerStack(ProfileController.GetInstance.Profile.ProfileContainers.ToArray());
+                vpm.DisplayContainerStack(ProfileController.GetInstance.Profile.Containers.ToArray());
                 ProfileController.GetInstance.IsNewProfileUpdate = false;
                 Logger.Log("Profile is successfully updated.");
             }

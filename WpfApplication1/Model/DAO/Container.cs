@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media.Media3D;
 using TIS_3dAntiCollision.Core;
 
-namespace TIS_3dAntiCollision.Business.DAO
+namespace TIS_3dAntiCollision.Model.DAO
 {
     class Container
     {
