@@ -9,9 +9,9 @@ namespace TIS_3dAntiCollision.Core
         public const double CONTAINER_WIDTH = 126;
         public const double TWENTY_FEET_CONTAINER_LENGTH = 300;
         public const double FORTY_FEET_CONTAINER_LENGTH = 600;
-        public const double DEFAULT_SPACE_BETWEEN_CONTAINER = 15;
+        public const double DEFAULT_SPACE_BETWEEN_CONTAINER = 10;
         public const double SENSOR_TO_GROUND_DISTANCE = 1286;
-        public const double DEFAULT_SPACE_BETWEEN_STACK = 25;
+        public const double DEFAULT_SPACE_BETWEEN_STACK = 50;
 
         public const double MIDDLE_STACK_CONTAINER_LENGTH = 600;
         public const double LEFT_STACK_CONTAINER_LENGTH = 300;
@@ -43,7 +43,7 @@ namespace TIS_3dAntiCollision.Core
         public const double SCAN_STEP_ANGLE = 3.6;
         public const double OFFSET_SCAN_SETUP = 27;
         // offset when scan stack
-        public const double Z_OFFSET = 20;
+        public const double Z_OFFSET = 30;
 
         // movement
         public const double MIN_TROLLEY_STOP_RANGE = 10;
@@ -71,7 +71,7 @@ namespace TIS_3dAntiCollision.Core
         public const int PROFILING_HORIZONTAL_LINE_THICKNESS = 3;
         public const int PROFILING_HORIZONTAL_NUM_POINT_LIMIT = 5;
         public const int PROFILING_MERGE_LINE_DISTANCE = 10;
-        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 72;
+        public const int DEFAULT_FIRST_CONTAINER_CELL_POSITION_X = 0;
         public const int PROFILING_MAX_V_BASE_LINE_DEVIATION = 10;
 
         // SENSOR ANS SPREADER OFFSET SET UP
@@ -79,7 +79,7 @@ namespace TIS_3dAntiCollision.Core
         public const double SENSOR_OFFSET_Y = 0;
         public const double SENSOR_OFFSET_Z = 0;
 
-        public const double SPREADER_OFFSET_X = 130;
+        public const double SPREADER_OFFSET_X = 117;
         public const double SPREADER_OFFSET_Y = 0;
         public const double SPREADER_OFFSET_Z = 0;
         // set swing range of spreader and holded container

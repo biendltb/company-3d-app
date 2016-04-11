@@ -141,7 +141,6 @@ namespace TIS_3dAntiCollision.UI
                 ProfileController.GetInstance.IsNewProfileUpdate = false;
                 Logger.Log("Profile is successfully updated.");
             }
-
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)

@@ -66,26 +66,57 @@ namespace TIS_3dAntiCollision.Model.DAO
                 // generate the left stack containers
                 Stack left_stack = stacks[0];
                 for (int i = 0; i < left_stack.Columns.Count; i++)
+                {
                     for (int j = 0; j < left_stack.Columns[i].Quantity; j++)
-                        containers.Add(new Container(new Point3D(i * column_width, j * ConfigParameters.CONTAINER_HEIGHT, left_stack.Columns[i].ZPos),
+                    {
+                        double z_pos = ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                                        + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH;
+
+                        // Update the top container of each column
+                        if (j == left_stack.Columns[i].Quantity - 1)
+                            z_pos = left_stack.Columns[i].ZPos;
+
+                        containers.Add(new Container(new Point3D(i * column_width,
+                                                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - j * ConfigParameters.CONTAINER_HEIGHT,
+                                                z_pos),
                                             ConfigParameters.LEFT_STACK_CONTAINER_LENGTH,
                                             left_stack.Columns[i].Score));
+                    }
+                }
 
                 // generate the middle stack containers
                 Stack middle_stack = stacks[1];
                 for (int i = 0; i < middle_stack.Columns.Count; i++)
                     for (int j = 0; j < middle_stack.Columns[i].Quantity; j++)
-                        containers.Add(new Container(new Point3D(i * column_width, j * ConfigParameters.CONTAINER_HEIGHT, middle_stack.Columns[i].ZPos),
+                    {
+                        double z_pos = ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2;
+
+                        if (j == middle_stack.Columns[i].Quantity - 1)
+                            z_pos = middle_stack.Columns[i].ZPos;
+
+                        containers.Add(new Container(new Point3D(i * column_width,
+                                                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - j * ConfigParameters.CONTAINER_HEIGHT,
+                                                z_pos),
                                             ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH,
                                             middle_stack.Columns[i].Score));
+                    }
 
                 // generate the right stack containers
                 Stack right_stack = stacks[2];
                 for (int i = 0; i < right_stack.Columns.Count; i++)
                     for (int j = 0; j < right_stack.Columns[i].Quantity; j++)
-                        containers.Add(new Container(new Point3D(i * column_width, j * ConfigParameters.CONTAINER_HEIGHT, right_stack.Columns[i].ZPos),
-                                            ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH,
+                    {
+                        double z_pos = -ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK;
+
+                        if (j == right_stack.Columns[i].Quantity - 1)
+                            z_pos = right_stack.Columns[i].ZPos;
+
+                        containers.Add(new Container(new Point3D(i * column_width,
+                                                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - j * ConfigParameters.CONTAINER_HEIGHT, 
+                                                z_pos),
+                                                ConfigParameters.RIGHT_STACK_CONTAINER_LENGTH,
                                             right_stack.Columns[i].Score));
+                    }
             }
         }
 
@@ -107,25 +138,28 @@ namespace TIS_3dAntiCollision.Model.DAO
                 }
             }
             else
-                // update all column in old profile if the column data is stronger
-                for (int i = 0; i < stacks.Count; i++)
-                {
-                    int num_of_col = _p.stacks[i].Columns.Count < stacks[i].Columns.Count
-                                            ? _p.stacks[i].Columns.Count
-                                            : stacks[i].Columns.Count;
-
-                    for (int j = 0; j < num_of_col; j++)
+                if (stacks.Count == 0)
+                    stacks = _p.stacks;
+                else
+                    // update all column in old profile if the column data is stronger
+                    for (int i = 0; i < stacks.Count; i++)
                     {
-                        Column current_col = stacks[i].Columns[j];
-                        Column new_col = _p.stacks[i].Columns[j];
-                        if (new_col.Score > current_col.Score)
+                        int num_of_col = _p.stacks[i].Columns.Count < stacks[i].Columns.Count
+                                                ? _p.stacks[i].Columns.Count
+                                                : stacks[i].Columns.Count;
+
+                        for (int j = 0; j < num_of_col; j++)
                         {
-                            stacks[i].Columns[j].Quantity = new_col.Quantity;
-                            stacks[i].Columns[j].Score = new_col.Score;
-                            stacks[i].Columns[j].ZPos = new_col.ZPos;
+                            Column current_col = stacks[i].Columns[j];
+                            Column new_col = _p.stacks[i].Columns[j];
+                            if (new_col.Score > current_col.Score)
+                            {
+                                stacks[i].Columns[j].Quantity = new_col.Quantity;
+                                stacks[i].Columns[j].Score = new_col.Score;
+                                stacks[i].Columns[j].ZPos = new_col.ZPos;
+                            }
                         }
                     }
-                }
 
             generateContainers();
         }

@@ -26,6 +26,8 @@ namespace TIS_3dAntiCollision.UI
 
             parseData();
 
+            cropData();
+
             displaySideView();
             //displayTopView();
             //displayFrontView();
@@ -41,7 +43,7 @@ namespace TIS_3dAntiCollision.UI
             Point3D[] result_points = csp.GetMiddleStackProfile();
             //Point3D[] result_points = csp.GetSideStackProfile(true);
 
-            foreach (Point3D point in result_points)
+            foreach (Point3D point in points)
                 chart1.Series["Series1"].Points.AddXY(point.X, point.Y);
         }
 
@@ -54,7 +56,7 @@ namespace TIS_3dAntiCollision.UI
                         
             foreach (Point3D point in point_arr)
             {
-                if (point.Z >= -300 && point.Z <= 300)
+                if (point.Z >= -330 && point.Z <= 270)
                     list_point.Add(point);
             }
             point_data = list_point.ToArray();
@@ -82,6 +84,18 @@ namespace TIS_3dAntiCollision.UI
 
             foreach (Point3D point in point_data)
                 chart1.Series["Series1"].Points.AddXY(point.Z, point.Y);
+        }
+
+        private void cropData()
+        {
+            List<Point3D> result = new List<Point3D>();
+
+            for (int i = 0; i < point_data.Length; i++)
+                if (point_data[i].X >= ConfigParameters.MIN_X_RANGE && point_data[i].X <= ConfigParameters.MAX_X_RANGE // valid x range
+                    && point_data[i].Y >= ConfigParameters.MIN_Y_RANGE && point_data[i].Y <= ConfigParameters.MAX_Y_RANGE) // valide y range
+                    result.Add(point_data[i]);
+
+            point_data = result.ToArray();
         }
     }
 }

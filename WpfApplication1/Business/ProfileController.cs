@@ -21,7 +21,7 @@ namespace TIS_3dAntiCollision.Business
 
         public bool IsNewProfileUpdate = false;
 
-        private SingleLine vertical_base_line = new SingleLine(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, 
+        private SingleLine vertical_base_line = new SingleLine(ConfigParameters.DEFAULT_FIRST_CONTAINER_CELL_POSITION_X, //50);
                                                                 ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT);
 
         static ProfileController() {}
@@ -115,6 +115,7 @@ namespace TIS_3dAntiCollision.Business
                 {
                     double new_base_line_value = top_line.Value - (int)(top_line.Value / container_column_width) * container_column_width;
                     vertical_base_line = new SingleLine(new_base_line_value, top_line.Score);
+                    Logger.Log("New vertical base line: " + new_base_line_value + " with socre: " + top_line.Score);
                 }
             }
 
@@ -170,20 +171,22 @@ namespace TIS_3dAntiCollision.Business
             List<Point3D> overlap_range_points = new List<Point3D>();
 
             // filter to get all point in the overlap range
-            if (!_isRight)
+            if (_isRight)
             {
                 foreach (Point3D point in _points)
-                    if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.Z_OFFSET)
+                    if (point.Z < -ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z > -ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.Z_OFFSET)
                         overlap_range_points.Add(point);
             }
             else
             {
                 foreach (Point3D point in _points)
-                    if (point.Z < -ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z > -ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 + ConfigParameters.Z_OFFSET)
+                    if (point.Z > ConfigParameters.MIDDLE_STACK_SECTION_LENGTH_Z && point.Z < ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2 - ConfigParameters.Z_OFFSET)
                         overlap_range_points.Add(point);
             }
 
             double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+
+            //(new TIS_3dAntiCollision.UI.DataRepresentChart(overlap_range_points.ToArray())).Show();
 
             for (int i = 0; i < _middle_stack.Columns.Count; i++)
             {
@@ -209,16 +212,19 @@ namespace TIS_3dAntiCollision.Business
 
                 SingleLine highest_line = new SingleLine(ConfigParameters.SENSOR_TO_GROUND_DISTANCE, 0);
 
+                // find the highest
+                // but score of the highest must be higher than haft of score of the boldest line
                 foreach (SingleLine l in lines)
                     // TODO: Check the strong of line in here
-                    if (l.Value < highest_line.Value)
+                    if (l.Value < highest_line.Value && l.Score > lines[0].Score / 2 && l.Score != 0)
                         highest_line = new SingleLine(l.Value, l.Score);
 
                 // add empty column to list overlap column
                 overlap_cols.Add(new Column());
 
                 // compare to middle stack profile
-                if (Math.Abs(highest_line.Value - _middle_stack.Columns[i].Quantity * ConfigParameters.CONTAINER_HEIGHT) > ConfigParameters.CONTAINER_HEIGHT / 3)
+                if (Math.Abs(highest_line.Value - (ConfigParameters.SENSOR_TO_GROUND_DISTANCE - _middle_stack.Columns[i].Quantity * ConfigParameters.CONTAINER_HEIGHT)) 
+                    > ConfigParameters.CONTAINER_HEIGHT / 3)
                 // detect and collect the overlap container
                 {
                     double sum_z_tmp = 0;
@@ -231,7 +237,7 @@ namespace TIS_3dAntiCollision.Business
                             z_count++;
                         }
                     if (z_count != 0)
-                        overlap_cols[i] = new Column((int)((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT) + 1,
+                        overlap_cols[i] = new Column((int)Math.Round((ConfigParameters.SENSOR_TO_GROUND_DISTANCE - highest_line.Value) / ConfigParameters.CONTAINER_HEIGHT),
                                                         _isRight ? sum_z_tmp / z_count
                                                         : sum_z_tmp / z_count + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH, 
                                                         highest_line.Score);

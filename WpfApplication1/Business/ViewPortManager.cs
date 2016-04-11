@@ -71,9 +71,6 @@ namespace TIS_3dAntiCollision.Business
             model_visual.Content = model_group;
 
             view_port.Children.Add(model_visual);
-
-            // create the base lines
-            createLineNet(model_group);
         }
 
         private void resetModelGroup()
@@ -81,6 +78,9 @@ namespace TIS_3dAntiCollision.Business
             model_group.Children.Clear();
             model_group.Children.Add(directional_light);
             model_group.Children.Add(new AmbientLight(Colors.DimGray));
+
+            // create the base lines
+            createLineNet(model_group);
 
             index_of_spreader = -1;
         }
@@ -99,6 +99,8 @@ namespace TIS_3dAntiCollision.Business
             //    model_group.Children.RemoveAt(i);
 
             //container_indexes.Clear();
+
+            resetModelGroup();
 
             // add new containers and index them
             foreach (Container m_container in containers)
