@@ -58,7 +58,7 @@ namespace TIS_3dAntiCollision.Core
 
         // Divide middle container to many sections
         // Middle section area for conducting the middle container stack profile
-        public const double MIDDLE_STACK_SECTION_LENGTH_Z = 50; // from -50 mm to 50mm
+        public const double MIDDLE_STACK_SECTION_LENGTH_Z = 100; // from -50 mm to 50mm
 
         // 3D representation
         public ContainerTypes MIDDLE_CONTAINER_TYPE = ContainerTypes.FortyFeet;
