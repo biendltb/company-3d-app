@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using TIS_3dAntiCollision.Core;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Business.Profiling
 {
     /// <summary>
     /// Profile container stack

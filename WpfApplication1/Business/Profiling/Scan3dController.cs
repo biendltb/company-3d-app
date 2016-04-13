@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using TIS_3dAntiCollision.Services;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Business.Profiling
 {
     public sealed class Scan3dController
     {

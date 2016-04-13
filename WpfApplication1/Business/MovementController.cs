@@ -99,7 +99,7 @@ namespace TIS_3dAntiCollision.Business
 
         private static short getRealSpeed(short speed_percent)
         {
-            return (short)(speed_percent * ConfigParameters.MAX_TROLLEY_SPEED / 100);
+            return (short)(speed_percent * ConfigParameters.MAX_SPEED / 100);
         }
     }
 }

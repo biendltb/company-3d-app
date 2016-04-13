@@ -27,13 +27,9 @@ namespace TIS_3dAntiCollision.Business
         }
 
         // Explicit static constructor to tell C# compiler not to mark type as beforefieldinit
-        static PlcManager()
-        {
-        }
+        static PlcManager(){}
 
-        PlcManager()
-        {
-        }
+        PlcManager(){}
 
         public static PlcManager GetInstance
         {
@@ -76,7 +72,6 @@ namespace TIS_3dAntiCollision.Business
             return plc.WriteStruct(OnlineDataBlock, ConfigParameters.DATA_BLOCK_NUMBER).ToString();
         }
 
-
         public void TriggerMiniMotor()
         {
             PlcManager.GetInstance.OnlineDataBlock.Start_swivel = true;
@@ -96,6 +91,16 @@ namespace TIS_3dAntiCollision.Business
             return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SPREADER_OFFSET_X,
                 ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post + ConfigParameters.CONTAINER_HEIGHT,
                 ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2);
+        }
+
+        public double TrolleySpeedPercent
+        {
+            get { return OnlineDataBlock.X_Speed / ConfigParameters.MAX_SPEED * 100; }
+        }
+
+        public double HoistSpeedPercent
+        {
+            get { return OnlineDataBlock.Y_Speed / ConfigParameters.MAX_SPEED * 100; }
         }
         
     }

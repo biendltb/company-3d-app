@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using TIS_3dAntiCollision.Core;
 using TIS_3dAntiCollision.Business;
 using TIS_3dAntiCollision.Services;
+using TIS_3dAntiCollision.Business.Profiling;
 
 namespace TIS_3dAntiCollision.UI
 {

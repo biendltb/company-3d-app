@@ -58,16 +58,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Business\AntiCollision\AntiCollision.cs" />
     <Compile Include="Model\DAO\Column.cs" />
     <Compile Include="Model\DAO\Container.cs" />
-    <Compile Include="Business\ContainerStackProfiler.cs" />
+    <Compile Include="Business\Profiling\ContainerStackProfiler.cs" />
     <Compile Include="Model\DAO\Profile.cs" />
     <Compile Include="Model\DAO\Stack.cs" />
-    <Compile Include="Business\ProfileController.cs" />
-    <Compile Include="Business\Scan3dController.cs" />
-    <Compile Include="Business\SinglePlaneScanController.cs" />
-    <Compile Include="Business\SingleScanEncoder.cs" />
-    <Compile Include="Business\ViewPortMouseActivity.cs" />
+    <Compile Include="Business\Profiling\ProfileController.cs" />
+    <Compile Include="Business\Profiling\Scan3dController.cs" />
+    <Compile Include="Business\Profiling\SinglePlaneScanController.cs" />
+    <Compile Include="Business\Profiling\SingleScanEncoder.cs" />
+    <Compile Include="Display\ViewPortMouseActivity.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\DataStorageManager.cs" />
     <Compile Include="Services\ScanDataEncoder.cs" />
@@ -92,12 +93,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Business\DisplayUpdater.cs" />
     <Compile Include="Business\MovementController.cs" />
     <Compile Include="Business\PlcManager.cs" />
-    <Compile Include="Business\SensorManger.cs" />
+    <Compile Include="Business\Profiling\SensorManger.cs" />
     <Compile Include="Services\SensorOutputParser.cs" />
-    <Compile Include="Business\ViewPortManager.cs" />
+    <Compile Include="Display\ViewPortManager.cs" />
     <Compile Include="Core\ConfigFileManager.cs" />
     <Compile Include="Core\Conversion.cs" />
     <Compile Include="Core\DataTypes.cs" />
@@ -191,9 +191,7 @@
   <ItemGroup>
     <Resource Include="images\led_red.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="images\led.png" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

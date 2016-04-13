@@ -18,6 +18,8 @@ using TIS_3dAntiCollision.Display;
 using TIS_3dAntiCollision.Business;
 using System.Windows.Threading;
 using TIS_3dAntiCollision.Services;
+using TIS_3dAntiCollision.Business.Profiling;
+using TIS_3dAntiCollision.Business.AntiCollision;
 
 namespace TIS_3dAntiCollision.UI
 {
@@ -43,7 +45,6 @@ namespace TIS_3dAntiCollision.UI
 
         // turn on auto-profiling mode
         private bool isProfileMode = false;
-
 
         public MainWindow()
         {
@@ -101,6 +102,11 @@ namespace TIS_3dAntiCollision.UI
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Always keep running when program operates
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void service_timer_Tick(object sender, EventArgs e)
         {
             if (Logger.LogDisplayQueue.Count > 0)
@@ -118,6 +124,11 @@ namespace TIS_3dAntiCollision.UI
                 lb_log.Items.RemoveAt(0);
         }
 
+        /// <summary>
+        /// Work only when plc is connected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void m_plc_timer_Tick(object sender, EventArgs e)
         {
             // update struct
@@ -141,6 +152,9 @@ namespace TIS_3dAntiCollision.UI
                 ProfileController.GetInstance.IsNewProfileUpdate = false;
                 Logger.Log("Profile is successfully updated.");
             }
+
+            // check anti-collision
+            AntiCollision.GetInstance.CheckCollision();
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)

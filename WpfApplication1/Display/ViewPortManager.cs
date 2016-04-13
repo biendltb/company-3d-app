@@ -8,7 +8,7 @@ using TIS_3dAntiCollision.Model.DAO;
 using System.Windows;
 using System.Windows.Documents;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Display
 {
     class ViewPortManager
     {

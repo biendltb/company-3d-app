@@ -6,7 +6,7 @@ using System;
 using System.Windows;
 using TIS_3dAntiCollision.Model.DAO;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Business.Profiling
 {
     public sealed class ProfileController
     {

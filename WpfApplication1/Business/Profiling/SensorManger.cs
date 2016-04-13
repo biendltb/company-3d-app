@@ -5,7 +5,7 @@ using System.Text;
 using TIS_3dAntiCollision.Core;
 using TIS_3dAntiCollision.Services;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Business.Profiling
 {
     public sealed class SensorManger
     {

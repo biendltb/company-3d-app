@@ -5,7 +5,7 @@ using System.Text;
 using TIS_3dAntiCollision.Core;
 using System.IO;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Business.Profiling
 {
     static class SingleScanEncoder
     {

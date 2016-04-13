@@ -17,11 +17,6 @@ namespace TIS_3dAntiCollision.Core
             public String Section;
             public String Key;
         }
-        private struct ReadPair
-        {
-            public String Key;
-            public String Section;
-        }
 
         /// <summary>
         /// Opens the INI file at the given path and enumerates the values in the IniParser.

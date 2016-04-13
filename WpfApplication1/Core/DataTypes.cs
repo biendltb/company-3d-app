@@ -59,4 +59,17 @@ namespace TIS_3dAntiCollision.Core
             this.Score = score;
         }
     }
+
+    public enum MoveRoute
+    {
+        Up = 0,
+        Down,
+        Reverse,
+        Forward,
+        UpReverse,
+        UpForward,
+        DownReverse,
+        DownForward,
+        NotMove
+    };
 }

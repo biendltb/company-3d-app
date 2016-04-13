@@ -163,5 +163,36 @@ namespace TIS_3dAntiCollision.Model.DAO
 
             generateContainers();
         }
+
+        public Stack GetMiddleContainerMap()
+        {
+            List<Column> cols = new List<Column>();
+
+            if (stacks.Count != 0)
+            {
+                // copy columns of the middle stack
+                cols = stacks[1].Columns;
+                // check left and right stack to find the adjacent bay collision
+                for (int i = 0; i < cols.Count; i++)
+                {
+                    // compare to the left stack columns
+                    double left_stack_start_z = ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2
+                                                + ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                                                + ConfigParameters.LEFT_STACK_CONTAINER_LENGTH;
+                    double right_stack_start_z = - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2
+                                                - ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK;
+                    // if the top container of left stack column pass the space between stacks
+                    // and higher than the middle
+                    if (left_stack_start_z - stacks[0].Columns[i].ZPos > ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                        && stacks[0].Columns[i].Quantity > cols[i].Quantity)
+                        cols[i] = stacks[0].Columns[i];
+                    // and right stack too
+                    if (stacks[2].Columns[i].ZPos - right_stack_start_z > ConfigParameters.DEFAULT_SPACE_BETWEEN_STACK
+                        && stacks[2].Columns[i].Quantity > cols[i].Quantity)
+                        cols[i] = stacks[2].Columns[i];
+                }
+            }
+            return new Stack(cols);
+        }
     }
 }

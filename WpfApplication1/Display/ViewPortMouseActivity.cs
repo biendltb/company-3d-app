@@ -4,7 +4,7 @@ using System.Windows;
 using System.Collections.Generic;
 using System;
 
-namespace TIS_3dAntiCollision.Business
+namespace TIS_3dAntiCollision.Display
 {
     static class ViewPortMouseActivity
     {

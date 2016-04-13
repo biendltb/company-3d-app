@@ -47,7 +47,7 @@ namespace TIS_3dAntiCollision.Core
 
         // movement
         public const double MIN_TROLLEY_STOP_RANGE = 10;
-        public const short MAX_TROLLEY_SPEED = 16384;
+        public const short MAX_SPEED = 16384;
         public const short NORMAL_SPEED = 40;
 
         // range limit
@@ -84,6 +84,10 @@ namespace TIS_3dAntiCollision.Core
         public const double SPREADER_OFFSET_Z = 0;
         // set swing range of spreader and holded container
         public const double SPREADER_SWING_RANGE = 40; //mm
+
+        // ANTI-COLLISION
+        public const double SLOW_RANGE_SPEED_RATE = 10;
+        public const double STOP_RANGE_SPEED_RATE = 1;
 
     }
 }
