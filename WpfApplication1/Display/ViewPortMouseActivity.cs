@@ -19,8 +19,9 @@ namespace TIS_3dAntiCollision.Display
         /// <param name="delta"></param>
         /// <param name="current_pos"></param>
         /// <returns>Return new camera position</returns>
-        public static Point3D ZoomViewPort(int delta, Point3D current_pos)
+        public static Point3D ZoomViewPort(int delta)
         {
+            Point3D current_pos = ViewPortManager.GetInstance.Camera.Position;
             // set the t
             double t = -0.01;
 

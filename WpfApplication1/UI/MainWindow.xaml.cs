@@ -28,8 +28,6 @@ namespace TIS_3dAntiCollision.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ViewPortManager vpm;
-
         Button plc_btn = WindowContentManager.GetDefaultBtn();
         Button sensor_btn = WindowContentManager.GetDefaultBtn();
         Button scan_btn = WindowContentManager.GetDefaultBtn();
@@ -51,7 +49,7 @@ namespace TIS_3dAntiCollision.UI
             InitializeComponent();
 
             init();
-            vpm = new ViewPortManager(m_viewPort);
+            ViewPortManager.GetInstance.AssignViewPort(m_viewPort);
         }
 
         private void init()
@@ -146,12 +144,12 @@ namespace TIS_3dAntiCollision.UI
                 Scan3dController.GetInstance.Trigger();
 
             // update view port if there is any new update and reset update checker flag
-            if (ProfileController.GetInstance.IsNewProfileUpdate)
-            {
-                vpm.DisplayContainerStack(ProfileController.GetInstance.Profile.Containers.ToArray());
-                ProfileController.GetInstance.IsNewProfileUpdate = false;
-                Logger.Log("Profile is successfully updated.");
-            }
+            //if (ProfileController.GetInstance.IsNewProfileUpdate)
+            //{
+            //    vpm.DisplayContainerStack(ProfileController.GetInstance.Profile.Containers.ToArray());
+            //    ProfileController.GetInstance.IsNewProfileUpdate = false;
+            //    Logger.Log("Profile is successfully updated.");
+            //}
 
             // check anti-collision
             AntiCollision.GetInstance.CheckCollision();
@@ -251,7 +249,7 @@ namespace TIS_3dAntiCollision.UI
             tb_y_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.Y_post, 2).ToString();
 
             // update spreader display position
-            vpm.DisplaySpreader(PlcManager.GetInstance.GetSpreaderPosition(), true);
+            ViewPortManager.GetInstance.DisplaySpreader(PlcManager.GetInstance.GetSpreaderPosition(), true);
 
             // update light indicator
             string led_red_key = "led_red";
@@ -302,16 +300,16 @@ namespace TIS_3dAntiCollision.UI
             Point3D[] left_stack_profile_points = csp.GetSideStackProfile(false);
             Point3D[] right_stack_profile_points = csp.GetSideStackProfile(true);
 
-            vpm.DisplayContainerStack(middle_stack_profile_points, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH);
-            vpm.DisplayContainerStack(left_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
-            vpm.DisplayContainerStack(right_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
+            ViewPortManager.GetInstance.DisplayContainerStack(middle_stack_profile_points, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH);
+            ViewPortManager.GetInstance.DisplayContainerStack(left_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
+            ViewPortManager.GetInstance.DisplayContainerStack(right_stack_profile_points, ConfigParameters.LEFT_STACK_CONTAINER_LENGTH);
 
             //(new DataRepresentChart(list_point.ToArray())).Show();
         }
 
         private void m_viewPort_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            vpm.Camera.Position = ViewPortMouseActivity.ZoomViewPort(e.Delta, vpm.Camera.Position);
+            ViewPortManager.GetInstance.Camera.Position = ViewPortMouseActivity.ZoomViewPort(e.Delta);
             //Console.WriteLine(e.Delta);
         }
 
@@ -324,11 +322,15 @@ namespace TIS_3dAntiCollision.UI
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                Point3D new_camera_position = new Point3D(vpm.Camera.Position.X, vpm.Camera.Position.Y, vpm.Camera.Position.Z);
-                Vector3D new_camera_look_direction = new Vector3D(vpm.Camera.LookDirection.X, vpm.Camera.LookDirection.Y, vpm.Camera.LookDirection.Z);
+                Point3D new_camera_position = new Point3D(ViewPortManager.GetInstance.Camera.Position.X,
+                    ViewPortManager.GetInstance.Camera.Position.Y, 
+                    ViewPortManager.GetInstance.Camera.Position.Z);
+                Vector3D new_camera_look_direction = new Vector3D(ViewPortManager.GetInstance.Camera.LookDirection.X, 
+                    ViewPortManager.GetInstance.Camera.LookDirection.Y, 
+                    ViewPortManager.GetInstance.Camera.LookDirection.Z);
                 ViewPortMouseActivity.RotateViewPort(e.GetPosition(null), ref new_camera_position, ref new_camera_look_direction);
-                vpm.Camera.Position = new_camera_position;
-                vpm.Camera.LookDirection = new_camera_look_direction;
+                ViewPortManager.GetInstance.Camera.Position = new_camera_position;
+                ViewPortManager.GetInstance.Camera.LookDirection = new_camera_look_direction;
             }
         }
 

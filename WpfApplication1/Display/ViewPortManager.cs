@@ -10,8 +10,19 @@ using System.Windows.Documents;
 
 namespace TIS_3dAntiCollision.Display
 {
-    class ViewPortManager
+    public sealed class ViewPortManager
     {
+        // declare singleton
+        static readonly ViewPortManager vpm = new ViewPortManager();
+
+        static ViewPortManager() { }
+        ViewPortManager() { }
+
+        public static ViewPortManager GetInstance
+        {
+            get { return vpm; }
+        }
+
         Viewport3D view_port;
         public PerspectiveCamera Camera = new PerspectiveCamera();
         DirectionalLight directional_light = new DirectionalLight();
@@ -39,7 +50,7 @@ namespace TIS_3dAntiCollision.Display
 
         private int index_of_spreader = -1;
 
-        public ViewPortManager(Viewport3D view_port)
+        public void AssignViewPort(Viewport3D view_port)
         {
             this.view_port = view_port;
 

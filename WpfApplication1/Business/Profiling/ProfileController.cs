@@ -5,6 +5,7 @@ using TIS_3dAntiCollision.Services;
 using System;
 using System.Windows;
 using TIS_3dAntiCollision.Model.DAO;
+using TIS_3dAntiCollision.Display;
 
 namespace TIS_3dAntiCollision.Business.Profiling
 {
@@ -43,8 +44,10 @@ namespace TIS_3dAntiCollision.Business.Profiling
 
             this.profile.UpdateProfile(new_profile);
 
-            // mark that there is an available profile update
-            IsNewProfileUpdate = true;
+            // update the view port
+            ViewPortManager.GetInstance.DisplayContainerStack(this.Profile.Containers.ToArray());
+            Logger.Log("Profile is successfully updated.");
+
         }
 
         private Profile getProfile(Point3D[] points)

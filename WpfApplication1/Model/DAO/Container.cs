@@ -3,7 +3,7 @@ using TIS_3dAntiCollision.Core;
 
 namespace TIS_3dAntiCollision.Model.DAO
 {
-    class Container
+    public class Container
     {
         // position of container in 3D space
         private Point3D position = new Point3D();

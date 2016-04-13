@@ -27,8 +27,8 @@ namespace TIS_3dAntiCollision.Business.AntiCollision
 
         private MoveRoute getDirection()
         {
-            double hoist_speed = PlcManager.GetInstance.GetHoistSpeedPercent();
-            double trolley_speed = PlcManager.GetInstance.GetTrolleySpeedPercent();
+            double hoist_speed = PlcManager.GetInstance.HoistSpeedPercent;
+            double trolley_speed = PlcManager.GetInstance.TrolleySpeedPercent;
 
             if (hoist_speed > 0)
                 if (trolley_speed == 0)
