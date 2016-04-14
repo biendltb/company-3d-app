@@ -143,16 +143,9 @@ namespace TIS_3dAntiCollision.UI
             if (PlcManager.GetInstance.IsConnect && SensorManger.GetInstance.IsConnect && isProfileMode)
                 Scan3dController.GetInstance.Trigger();
 
-            // update view port if there is any new update and reset update checker flag
-            //if (ProfileController.GetInstance.IsNewProfileUpdate)
-            //{
-            //    vpm.DisplayContainerStack(ProfileController.GetInstance.Profile.Containers.ToArray());
-            //    ProfileController.GetInstance.IsNewProfileUpdate = false;
-            //    Logger.Log("Profile is successfully updated.");
-            //}
-
             // check anti-collision
-            AntiCollision.GetInstance.CheckCollision();
+            CollisionStatus status = AntiCollision.GetInstance.CheckCollision();
+            Logger.Log("Collision status: " + status);
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)
@@ -249,7 +242,7 @@ namespace TIS_3dAntiCollision.UI
             tb_y_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.Y_post, 2).ToString();
 
             // update spreader display position
-            ViewPortManager.GetInstance.DisplaySpreader(PlcManager.GetInstance.GetSpreaderPosition(), true);
+            ViewPortManager.GetInstance.DisplaySpreaderHoldingContainer(PlcManager.GetInstance.SpreaderPosition, true);
 
             // update light indicator
             string led_red_key = "led_red";
@@ -356,6 +349,8 @@ namespace TIS_3dAntiCollision.UI
 
             //PlcManager.GetInstance.OnlineDataBlock.H_SetPoint = 0;
             //PlcManager.GetInstance.WriteStruct();
+
+            AntiCollision.GetInstance.CheckCollision();
         }
 
         private void MenuItem_Test3DScan_Click(object sender, RoutedEventArgs e)

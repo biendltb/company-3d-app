@@ -9,7 +9,7 @@ namespace TIS_3dAntiCollision.Core
         public const double CONTAINER_WIDTH = 126;
         public const double TWENTY_FEET_CONTAINER_LENGTH = 300;
         public const double FORTY_FEET_CONTAINER_LENGTH = 600;
-        public const double DEFAULT_SPACE_BETWEEN_CONTAINER = 10;
+        public const double DEFAULT_SPACE_BETWEEN_COLUMN = 10;
         public const double SENSOR_TO_GROUND_DISTANCE = 1286;
         public const double DEFAULT_SPACE_BETWEEN_STACK = 50;
 
@@ -88,6 +88,7 @@ namespace TIS_3dAntiCollision.Core
         // ANTI-COLLISION
         public const double SLOW_RANGE_SPEED_RATE = 10;
         public const double STOP_RANGE_SPEED_RATE = 1;
+
 
     }
 }

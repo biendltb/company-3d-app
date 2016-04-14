@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TIS_3dAntiCollision.Model.DAO;
 using System.Windows;
 using System.Windows.Documents;
+using TIS_3dAntiCollision.Business;
 
 namespace TIS_3dAntiCollision.Display
 {
@@ -126,15 +127,22 @@ namespace TIS_3dAntiCollision.Display
 
         }
 
-        public void DisplaySpreader(Point3D spreader_position, bool isHoldingContainer)
+        public void DisplaySpreaderHoldingContainer(Point3D spreader_position, bool isHoldingContainer)
         {
-            GeometryModel3D spreader_container_model = getContainer(spreader_position, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH, Colors.Gold);
+            Point3D holding_container_position = new Point3D(spreader_position.X, spreader_position.Y + ConfigParameters.CONTAINER_HEIGHT, spreader_position.Z);
+            GeometryModel3D spreader_container_model = getContainer(holding_container_position, ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH, Colors.Gold);
 
             if (index_of_spreader != -1)
                 model_group.Children.RemoveAt(index_of_spreader);
 
             model_group.Children.Add(spreader_container_model);
             index_of_spreader = model_group.Children.IndexOf(spreader_container_model);
+        }
+
+        public void DisplayVirtualBox(Point3D next_point, MoveRoute move_direction)
+        {
+            GeometryModel3D virtual_box_model = createVirtualBox(PlcManager.GetInstance.SpreaderPosition, next_point, move_direction);
+            model_group.Children.Add(virtual_box_model);
         }
 
         // create the square hollow to represent the line
@@ -436,6 +444,95 @@ namespace TIS_3dAntiCollision.Display
 
             GeometryModel3D model_3d = new GeometryModel3D(mg, mat); ;
             return model_3d;
+        }
+
+        private GeometryModel3D createVirtualBox(Point3D spreader_point, Point3D next_point, MoveRoute move_direction)
+        {
+            GeometryModel3D geometry_model = new GeometryModel3D();
+            MeshGeometry3D triangle_mesh = new MeshGeometry3D();
+            Point3D holding_container_point = new Point3D(spreader_point.X,
+                                                spreader_point.Y + ConfigParameters.CONTAINER_HEIGHT,
+                                                spreader_point.Z);
+
+            // holding container first square points: 0 -> 3
+            triangle_mesh.Positions.Add(holding_container_point);
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X,
+                                                    holding_container_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    holding_container_point.Z));
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    holding_container_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    holding_container_point.Z));
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    holding_container_point.Y,
+                                                    holding_container_point.Z));
+
+            // holding container second square points: 4 -> 7
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X,
+                                                    holding_container_point.Y,
+                                                    holding_container_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X,
+                                                    holding_container_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    holding_container_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    holding_container_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    holding_container_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+            triangle_mesh.Positions.Add(new Point3D(holding_container_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    holding_container_point.Y,
+                                                    holding_container_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+
+            // virtual box first square : 8 -> 11
+            triangle_mesh.Positions.Add(next_point);
+            triangle_mesh.Positions.Add(new Point3D(next_point.X,
+                                                    next_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    next_point.Z));
+            triangle_mesh.Positions.Add(new Point3D(next_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    next_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    next_point.Z));
+            triangle_mesh.Positions.Add(new Point3D(next_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    next_point.Y,
+                                                    next_point.Z));
+
+            // virtual second square points : 12-15
+            triangle_mesh.Positions.Add(new Point3D(next_point.X,
+                                                    next_point.Y,
+                                                    next_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+            triangle_mesh.Positions.Add(new Point3D(next_point.X,
+                                                    next_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    next_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+            triangle_mesh.Positions.Add(new Point3D(next_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    next_point.Y - ConfigParameters.CONTAINER_HEIGHT,
+                                                    next_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+            triangle_mesh.Positions.Add(new Point3D(next_point.X + ConfigParameters.CONTAINER_WIDTH,
+                                                    next_point.Y,
+                                                    next_point.Z - ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH));
+
+            //   _______
+            // 2|       |1    
+            //  |       |
+            // 3|_______|0
+
+            List<int> list_indices = new List<int>();
+
+            switch (move_direction)
+            {
+                case MoveRoute.DownReverse:
+                    list_indices.AddRange(new int[]{9, 1, 0, 0, 8, 9,
+                                                    8, 0, 3, 3, 11, 8});
+                    break;
+                case MoveRoute.DownForward:
+                    // left side
+                    list_indices.AddRange(new int[]{3, 2, 10, 10, 11, 3,
+                                            0, 3, 11, 11, 8, 0});
+                    break;
+            }
+
+
+            foreach (int indice_pos in list_indices)
+                triangle_mesh.TriangleIndices.Add(indice_pos);
+
+            geometry_model.Geometry = triangle_mesh;
+            geometry_model.Material = new DiffuseMaterial(new SolidColorBrush(Colors.LimeGreen));
+            return geometry_model;
         }
     }
 }

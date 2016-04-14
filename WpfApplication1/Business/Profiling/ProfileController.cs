@@ -108,7 +108,7 @@ namespace TIS_3dAntiCollision.Business.Profiling
             // get the strongest vertical line
             SingleLine[] v_lines = getLines(x_arr, y_arr, ConfigParameters.PROFILING_VERTICAL_LINE_THICKNESS,
                                     ConfigParameters.PROFILING_VERTICAL_NUM_POINT_LIMIT, ConfigParameters.PROFILING_MERGE_LINE_DISTANCE);
-            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_COLUMN;
 
             // get the top line and update the vertical base line
             if (v_lines.Length > 0)
@@ -187,7 +187,7 @@ namespace TIS_3dAntiCollision.Business.Profiling
                         overlap_range_points.Add(point);
             }
 
-            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_COLUMN;
 
             //(new TIS_3dAntiCollision.UI.DataRepresentChart(overlap_range_points.ToArray())).Show();
 

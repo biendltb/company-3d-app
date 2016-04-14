@@ -73,7 +73,7 @@ namespace TIS_3dAntiCollision.Business.Profiling
                 top_line = lines[0];
             }
             // find the x start of container range
-            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_COLUMN;
             double start_container_range = top_line.Key - (int)(top_line.Key / container_column_width) * container_column_width;
 
             // set the base container stack point
@@ -137,7 +137,7 @@ namespace TIS_3dAntiCollision.Business.Profiling
             }
 
             // calculate the average height of every section
-            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+            double container_column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_COLUMN;
 
             for (int i = 0; i < list_x_pos_height.Count; i++)
             {

@@ -62,7 +62,7 @@ namespace TIS_3dAntiCollision.Model.DAO
 
             if (stacks.Count > 0)
             {
-                double column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_CONTAINER;
+                double column_width = ConfigParameters.CONTAINER_WIDTH + ConfigParameters.DEFAULT_SPACE_BETWEEN_COLUMN;
                 // generate the left stack containers
                 Stack left_stack = stacks[0];
                 for (int i = 0; i < left_stack.Columns.Count; i++)

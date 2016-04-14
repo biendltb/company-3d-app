@@ -88,9 +88,9 @@ namespace TIS_3dAntiCollision.Business.Profiling
                         SensorManger.GetInstance.Scan();
                         SingleScanData single_scan_data = new SingleScanData();
 
-                        single_scan_data.XPos = PlcManager.GetInstance.GetSensorPosition().X;
+                        single_scan_data.XPos = PlcManager.GetInstance.SensorPosition.X;
 
-                        single_scan_data.YPos = PlcManager.GetInstance.GetSpreaderPosition().Y;
+                        single_scan_data.YPos = PlcManager.GetInstance.SpreaderPosition.Y;
 
                         single_scan_data.PlaneAngle = real_time_angle;
 

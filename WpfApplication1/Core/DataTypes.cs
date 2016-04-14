@@ -72,4 +72,11 @@ namespace TIS_3dAntiCollision.Core
         DownForward,
         NotMove
     };
+
+    public enum CollisionStatus
+    {
+        Normal = 0,
+        Slow,
+        Stop
+    }
 }

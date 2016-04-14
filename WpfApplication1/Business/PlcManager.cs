@@ -79,18 +79,26 @@ namespace TIS_3dAntiCollision.Business
             PlcManager.GetInstance.WriteStruct();
         }
 
-        public Point3D GetSensorPosition()
+        public Point3D SensorPosition
         {
-            return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SENSOR_OFFSET_X,
-                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post,
-                ConfigParameters.SENSOR_OFFSET_Z);
+            get
+            {
+                return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SENSOR_OFFSET_X,
+                    ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post,
+                    ConfigParameters.SENSOR_OFFSET_Z);
+            }
         }
 
-        public Point3D GetSpreaderPosition()
+        // Position of spreader only, not the holding container
+        // ,-----^^------,0
+        public Point3D SpreaderPosition
         {
-            return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SPREADER_OFFSET_X,
-                ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post + ConfigParameters.CONTAINER_HEIGHT,
-                ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2);
+            get
+            {
+                return new Point3D(OnlineDataBlock.X_post + ConfigParameters.SPREADER_OFFSET_X,
+                    ConfigParameters.SENSOR_TO_GROUND_DISTANCE - OnlineDataBlock.Y_post,
+                    ConfigParameters.MIDDLE_STACK_CONTAINER_LENGTH / 2);
+            }
         }
 
         public double TrolleySpeedPercent
