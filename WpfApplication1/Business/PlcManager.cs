@@ -110,6 +110,131 @@ namespace TIS_3dAntiCollision.Business
         {
             get { return OnlineDataBlock.Y_Speed / ConfigParameters.MAX_SPEED * 100; }
         }
+
+        public double RealTrolleySpeed
+        {
+            get 
+            { 
+                return (OnlineDataBlock.X_Speed / ConfigParameters.MAX_SPEED) * 1350 / (60 * 41.2) * 90 * Math.PI;
+            }
+        }
+
+        public double RealHoistSpeed
+        {
+            get
+            {
+                return (OnlineDataBlock.Y_Speed / ConfigParameters.MAX_SPEED) * 860 / (60 * 23.8 * 2) * 120 * Math.PI;
+            }
+        }
+
+        public void SetSlowMode(MoveRoute move_direction)
+        {
+            resetSlow();
+            if (move_direction != MoveRoute.NotMove)
+            {
+                switch (move_direction)
+                {
+                    case MoveRoute.Up:
+                        OnlineDataBlock.H_Up_Slow = true;
+                        break;
+                    case MoveRoute.Down:
+                        OnlineDataBlock.H_Down_Slow = true;
+                        break;
+                    case MoveRoute.Forward:
+                        OnlineDataBlock.T_Forward_Slow = true;
+                        break;
+                    case MoveRoute.Reverse:
+                        OnlineDataBlock.T_Reverse_Slow = true;
+                        break;
+                    case MoveRoute.UpForward:
+                        OnlineDataBlock.H_Up_Slow = true;
+                        OnlineDataBlock.T_Forward_Slow = true;
+                        break;
+                    case MoveRoute.UpReverse:
+                        OnlineDataBlock.H_Up_Slow = true;
+                        OnlineDataBlock.T_Reverse_Slow = true;
+                        break;
+                    case MoveRoute.DownForward:
+                        OnlineDataBlock.H_Down_Slow = true;
+                        OnlineDataBlock.T_Forward_Slow = true;
+                        break;
+                    case MoveRoute.DownReverse:
+                        OnlineDataBlock.H_Down_Slow = true;
+                        OnlineDataBlock.T_Reverse_Slow = true;
+                        break;
+                }
+                WriteStruct();
+            }
+        }
+
+        public void SetStopMode(MoveRoute move_direction)
+        {
+            resetStop();
+
+            if (move_direction != MoveRoute.NotMove)
+            {
+                switch (move_direction)
+                {
+                    case MoveRoute.Up:
+                        OnlineDataBlock.H_Up_Stop = true;
+                        break;
+                    case MoveRoute.Down:
+                        OnlineDataBlock.H_Down_Stop = true;
+                        break;
+                    case MoveRoute.Forward:
+                        OnlineDataBlock.T_Forward_Stop = true;
+                        break;
+                    case MoveRoute.Reverse:
+                        OnlineDataBlock.T_Reverse_Stop = true;
+                        break;
+                    case MoveRoute.UpForward:
+                        OnlineDataBlock.H_Up_Stop = true;
+                        OnlineDataBlock.T_Forward_Stop = true;
+                        break;
+                    case MoveRoute.UpReverse:
+                        OnlineDataBlock.H_Up_Stop = true;
+                        OnlineDataBlock.T_Reverse_Stop = true;
+                        break;
+                    case MoveRoute.DownForward:
+                        OnlineDataBlock.H_Down_Stop = true;
+                        OnlineDataBlock.T_Forward_Stop = true;
+                        break;
+                    case MoveRoute.DownReverse:
+                        OnlineDataBlock.H_Down_Stop = true;
+                        OnlineDataBlock.T_Reverse_Stop = true;
+                        break;
+                }
+                WriteStruct();
+            }
+        }
+
+        public void ResetNormalMode()
+        {
+            resetStop();
+            resetSlow();
+
+            WriteStruct();
+        }
+
+        private void resetSlow()
+        {
+            OnlineDataBlock.H_Up_Slow = false;
+            OnlineDataBlock.H_Down_Slow = false;
+            OnlineDataBlock.T_Forward_Slow = false;
+            OnlineDataBlock.T_Reverse_Slow = false;
+
+            //WriteStruct();
+        }
+
+        private void resetStop()
+        {
+            OnlineDataBlock.H_Up_Stop = false;
+            OnlineDataBlock.H_Down_Stop = false;
+            OnlineDataBlock.T_Forward_Stop = false;
+            OnlineDataBlock.T_Reverse_Stop = false;
+
+            //WriteStruct();
+        }
         
     }
 }

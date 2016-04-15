@@ -144,8 +144,8 @@ namespace TIS_3dAntiCollision.UI
                 Scan3dController.GetInstance.Trigger();
 
             // check anti-collision
-            CollisionStatus status = AntiCollision.GetInstance.CheckCollision();
-            Logger.Log("Collision status: " + status);
+            AntiCollision.GetInstance.CheckCollision();
+            //Logger.Log("Collision status: " + status);
         }
 
         private void plc_btn_Click(object sender, RoutedEventArgs e)
@@ -241,6 +241,9 @@ namespace TIS_3dAntiCollision.UI
             tb_x_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.X_post, 2).ToString();
             tb_y_pos.Text = Math.Round(PlcManager.GetInstance.OnlineDataBlock.Y_post, 2).ToString();
 
+            tb_trolley_speed.Text = Math.Round(PlcManager.GetInstance.RealTrolleySpeed, 2).ToString();
+            tb_hoist_speed.Text = Math.Round(PlcManager.GetInstance.RealHoistSpeed, 2).ToString();
+
             // update spreader display position
             ViewPortManager.GetInstance.DisplaySpreaderHoldingContainer(PlcManager.GetInstance.SpreaderPosition, true);
 
@@ -252,16 +255,16 @@ namespace TIS_3dAntiCollision.UI
             if (PlcManager.GetInstance.OnlineDataBlock.T_Forward_Stop)
                 trolley_forward_led.Source = (ImageSource)Resources[led_red_key];
             else
-                if (PlcManager.GetInstance.OnlineDataBlock.T_Revert_Slow)
+                if (PlcManager.GetInstance.OnlineDataBlock.T_Reverse_Slow)
                     trolley_forward_led.Source = (ImageSource)Resources[led_orange_key];
                 else
                     trolley_forward_led.Source = (ImageSource)Resources[led_green_key];
 
             // trolley revert indicator
-            if (PlcManager.GetInstance.OnlineDataBlock.T_Revert_Stop)
+            if (PlcManager.GetInstance.OnlineDataBlock.T_Reverse_Stop)
                 trolley_revert_led.Source = (ImageSource)Resources[led_red_key];
             else
-                if (PlcManager.GetInstance.OnlineDataBlock.T_Revert_Slow)
+                if (PlcManager.GetInstance.OnlineDataBlock.T_Reverse_Slow)
                     trolley_revert_led.Source = (ImageSource)Resources[led_orange_key];
                 else
                     trolley_revert_led.Source = (ImageSource)Resources[led_green_key];
@@ -330,13 +333,13 @@ namespace TIS_3dAntiCollision.UI
         private void MenuMotorItem_Click(object sender, RoutedEventArgs e)
         {
             //// reset hoist
-            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = true;
-            //PlcManager.GetInstance.OnlineDataBlock.Remote = true;
-            //PlcManager.GetInstance.WriteStruct();
-            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = false;
-            //PlcManager.GetInstance.WriteStruct();
-            //PlcManager.GetInstance.OnlineDataBlock.Remote = false;
-            //PlcManager.GetInstance.WriteStruct();
+            PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = true;
+            PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            PlcManager.GetInstance.WriteStruct();
+            PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = false;
+            PlcManager.GetInstance.WriteStruct();
+            PlcManager.GetInstance.OnlineDataBlock.Remote = false;
+            PlcManager.GetInstance.WriteStruct();
 
             // reset trolley
             //PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = true;
@@ -347,10 +350,16 @@ namespace TIS_3dAntiCollision.UI
             //PlcManager.GetInstance.OnlineDataBlock.Remote = false;
             //PlcManager.GetInstance.WriteStruct();
 
+
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = true;
             //PlcManager.GetInstance.OnlineDataBlock.H_SetPoint = 0;
+            //PlcManager.GetInstance.OnlineDataBlock.H_Down_Stop = false;
+            //PlcManager.GetInstance.OnlineDataBlock.H_Up_Stop = false;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = false;
             //PlcManager.GetInstance.WriteStruct();
 
-            AntiCollision.GetInstance.CheckCollision();
+            //AntiCollision.GetInstance.CheckCollision();
         }
 
         private void MenuItem_Test3DScan_Click(object sender, RoutedEventArgs e)

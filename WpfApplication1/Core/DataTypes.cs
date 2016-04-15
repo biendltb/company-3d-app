@@ -15,9 +15,9 @@ namespace TIS_3dAntiCollision.Core
         public bool Trolley_Position_Reset;
         public bool Hoist_Position_Reset;
         public bool T_Forward_Slow;
-        public bool T_Revert_Slow;
+        public bool T_Reverse_Slow;
         public bool T_Forward_Stop;
-        public bool T_Revert_Stop;
+        public bool T_Reverse_Stop;
         public bool H_Up_Slow;
         public bool H_Down_Slow;
         public bool H_Up_Stop;

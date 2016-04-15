@@ -127,45 +127,87 @@
                           Header="Spreader position"
                           HorizontalAlignment="Stretch" 
                           Margin="5,0,10,0" 
-                          Name="groupBox1"
+                          Name="gb_spreader_position"
                           VerticalAlignment="Top">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Stretch" Orientation="Vertical">
-                            <Label 
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <Label 
                                    HorizontalAlignment="Stretch"
                                    Margin="5, 10, 5, 5"
                                    VerticalAlignment="Top"
                                    Content="X Position" />
-                            <Label Grid.Column="0"
+                                <Label Grid.Column="0"
                                    HorizontalAlignment="Stretch"
                                    Margin="5, 5, 5, 5"
                                    VerticalAlignment="Top"
                                    Content="Y Position" />
-                            
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Stretch" Orientation="Vertical">
-                            <TextBox 
+
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <TextBox 
                                      x:Name="tb_x_pos"
                                      IsEnabled="False"
                                      VerticalAlignment="Top"
                                      Margin="5, 10, 5, 5"
                                      Height="20"
                                      Text="0" />
-                            <TextBox 
+                                <TextBox 
                                      x:Name="tb_y_pos"
                                      IsEnabled="False"
                                      VerticalAlignment="Top"
                                      Margin="5, 10, 5, 5"
                                      Height="20"
                                      Text="0" />
-                        </StackPanel>
-                    </Grid>
-                
-                </GroupBox>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                    <!--SPEED -->
+                    <GroupBox
+                          Header="Speed"
+                          HorizontalAlignment="Stretch" 
+                          Margin="5,0,10,0" 
+                          Name="gb_speed"
+                          VerticalAlignment="Top">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <Label 
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 10, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Trolley speed" />
+                                <Label Grid.Column="0"
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 5, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Hoist speed" />
+
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <TextBox 
+                                     x:Name="tb_trolley_speed"
+                                     IsEnabled="False"
+                                     VerticalAlignment="Top"
+                                     Margin="5, 10, 5, 5"
+                                     Height="20"
+                                     Text="0" />
+                                <TextBox 
+                                     x:Name="tb_hoist_speed"
+                                     IsEnabled="False"
+                                     VerticalAlignment="Top"
+                                     Margin="5, 10, 5, 5"
+                                     Height="20"
+                                     Text="0" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
                 </StackPanel>
                 <!--SECOND COLUMN STACK PANEL-->
                 <StackPanel Grid.Column="1" HorizontalAlignment="Stretch" Orientation="Vertical">
@@ -222,6 +264,36 @@
                             </StackPanel>
                         </Grid>
                         
+                    </GroupBox>
+                    <!--SPEED -->
+                    <GroupBox
+                          Header="Collision Information"
+                          HorizontalAlignment="Stretch" 
+                          Margin="5,0,10,0" 
+                          Name="gb_collision_info"
+                          VerticalAlignment="Top">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <Label 
+                                   HorizontalAlignment="Stretch"
+                                   Margin="5, 10, 5, 5"
+                                   VerticalAlignment="Top"
+                                   Content="Distance to collsion" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <TextBox 
+                                     x:Name="tb_collision_distance"
+                                     IsEnabled="False"
+                                     VerticalAlignment="Top"
+                                     Margin="5, 10, 5, 5"
+                                     Height="20"
+                                     Text="0" />
+                            </StackPanel>
+                        </Grid>
                     </GroupBox>
                 </StackPanel>
             </Grid>
