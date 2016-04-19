@@ -255,7 +255,7 @@ namespace TIS_3dAntiCollision.UI
             if (PlcManager.GetInstance.OnlineDataBlock.T_Forward_Stop)
                 trolley_forward_led.Source = (ImageSource)Resources[led_red_key];
             else
-                if (PlcManager.GetInstance.OnlineDataBlock.T_Reverse_Slow)
+                if (PlcManager.GetInstance.OnlineDataBlock.T_Forward_Slow)
                     trolley_forward_led.Source = (ImageSource)Resources[led_orange_key];
                 else
                     trolley_forward_led.Source = (ImageSource)Resources[led_green_key];
@@ -333,13 +333,13 @@ namespace TIS_3dAntiCollision.UI
         private void MenuMotorItem_Click(object sender, RoutedEventArgs e)
         {
             //// reset hoist
-            PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = true;
-            PlcManager.GetInstance.OnlineDataBlock.Remote = true;
-            PlcManager.GetInstance.WriteStruct();
-            PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = false;
-            PlcManager.GetInstance.WriteStruct();
-            PlcManager.GetInstance.OnlineDataBlock.Remote = false;
-            PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = true;
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = true;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = false;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Remote = false;
+            //PlcManager.GetInstance.WriteStruct();
 
             // reset trolley
             //PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = true;
@@ -360,12 +360,33 @@ namespace TIS_3dAntiCollision.UI
             //PlcManager.GetInstance.WriteStruct();
 
             //AntiCollision.GetInstance.CheckCollision();
+
+            //PlcManager.GetInstance.OnlineDataBlock.T_Reverse_Stop = false;
+            //PlcManager.GetInstance.WriteStruct();
+
+            //reset hoist position
+            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = true;
+            //PlcManager.GetInstance.WriteStruct();
+            //PlcManager.GetInstance.OnlineDataBlock.Hoist_Position_Reset = false;
+            //PlcManager.GetInstance.WriteStruct();
+
+            // reset trolley position
+            PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = true;
+            PlcManager.GetInstance.WriteStruct();
+            PlcManager.GetInstance.OnlineDataBlock.Trolley_Position_Reset = false;
+            PlcManager.GetInstance.WriteStruct();
+
         }
 
         private void MenuItem_Test3DScan_Click(object sender, RoutedEventArgs e)
         {
             // trigger mini motor to start scan
             //Scan3dController.GetInstance.Trigger();
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            PlcManager.GetInstance.ResetNormalMode();
         }
     }
 }

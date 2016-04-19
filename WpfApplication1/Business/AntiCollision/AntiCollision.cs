@@ -40,10 +40,8 @@ namespace TIS_3dAntiCollision.Business.AntiCollision
             double stop_range = 20;
             double slow_range = movement_vector.Length * ConfigParameters.SLOW_RANGE_SPEED_RATE;
 
-            //Logger.Log("Trolley speed: " + trolley_speed);
-            //Logger.Log("Hoist speed: " + hoist_speed);
-            //Logger.Log("Stop range: " + stop_range);
-            //Logger.Log("Slow range: " + slow_range);
+            if (slow_range < ConfigParameters.MINIMUM_SLOW_RANGE_LIMIT)
+                slow_range = ConfigParameters.MINIMUM_SLOW_RANGE_LIMIT;
 
             // TODO: Check whether spreader holds container or not
             // Default is holding container
@@ -58,7 +56,7 @@ namespace TIS_3dAntiCollision.Business.AntiCollision
             double shortest_collision_distance = getDistanceCollision(movement_vector, lowest_spreader_complex_point, current_stack_map);
             Logger.Log("Distance to collision: " + shortest_collision_distance + " - Slow range: " + slow_range);
 
-            if (shortest_collision_distance != 99999)
+            //if (shortest_collision_distance != 99999)
                 if (shortest_collision_distance < stop_range)
                 {
                     PlcManager.GetInstance.SetStopMode(current_move_direction);
@@ -79,12 +77,12 @@ namespace TIS_3dAntiCollision.Business.AntiCollision
                         {
                             if (!isWarningMode)
                             {
-                                //PlcManager.GetInstance.ResetNormalMode();
+                                PlcManager.GetInstance.ResetNormalMode();
                             }
                         }
                         else
                         {
-                            //PlcManager.GetInstance.ResetNormalMode();
+                            PlcManager.GetInstance.ResetNormalMode();
                             isWarningMode = false;
                         }
                     }

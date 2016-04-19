@@ -44,5 +44,12 @@ namespace TIS_3dAntiCollision.Model.DAO
             this.z_pos = _z_pos;
             this.score = _score;
         }
+
+        public Column(Column new_col)
+        {
+            this.quantity = new_col.Quantity;
+            this.z_pos = new_col.ZPos;
+            this.Score = new_col.Score;
+        }
     }
 }

@@ -163,37 +163,22 @@ namespace TIS_3dAntiCollision.Display
             triangle_mesh.Positions.Add(new Point3D(end_point.X, end_point.Y + thickness, end_point.Z + thickness));
             triangle_mesh.Positions.Add(new Point3D(end_point.X, end_point.Y + thickness, end_point.Z));
 
+            List<int> list_indices = new List<int>();
+
             // top
-            triangle_mesh.TriangleIndices.Add(4);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(1);
-            triangle_mesh.TriangleIndices.Add(1);
-            triangle_mesh.TriangleIndices.Add(5);
-            triangle_mesh.TriangleIndices.Add(4);
+            list_indices.AddRange(new int[] { 4, 0, 1, 1, 5, 4 });
 
             // left side
-            triangle_mesh.TriangleIndices.Add(7);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(4);
-            triangle_mesh.TriangleIndices.Add(7);
+            list_indices.AddRange(new int[] { 7, 3, 0, 0, 4, 7 });
 
             // right side
-            triangle_mesh.TriangleIndices.Add(1);
-            triangle_mesh.TriangleIndices.Add(2);
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(5);
-            triangle_mesh.TriangleIndices.Add(1);
+            list_indices.AddRange(new int[] { 1, 2, 6, 6, 5, 1});
 
             // bottom side
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(2);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(7);
-            triangle_mesh.TriangleIndices.Add(6);
+            list_indices.AddRange(new int[] { 6, 2, 3, 3, 7, 6 });
+
+            foreach (int indice_id in list_indices)
+                triangle_mesh.TriangleIndices.Add(indice_id);
 
             geometry_model.Geometry = triangle_mesh;
             //geometry_model.Material = new DiffuseMaterial(new SolidColorBrush(Colors.LawnGreen));
@@ -266,54 +251,28 @@ namespace TIS_3dAntiCollision.Display
             triangle_mesh.Positions.Add(new Point3D(container_position.X + ConfigParameters.CONTAINER_WIDTH, container_position.Y,
                                                         container_position.Z - container_length));
 
+            List<int> list_indices = new List<int>();
+
             // top
-            triangle_mesh.TriangleIndices.Add(1);
-            triangle_mesh.TriangleIndices.Add(5);
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(2);
-            triangle_mesh.TriangleIndices.Add(1);
+            list_indices.AddRange(new int[] { 1, 5, 6, 6, 2, 1});
 
             // left side
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(7);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(2);
-            triangle_mesh.TriangleIndices.Add(6);
+            list_indices.AddRange(new int[] { 6, 7, 3, 3, 2, 6 });
 
             // right side
-            triangle_mesh.TriangleIndices.Add(5);
-            triangle_mesh.TriangleIndices.Add(1);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(4);
-            triangle_mesh.TriangleIndices.Add(5);
+            list_indices.AddRange(new int[] {5, 1, 0, 0, 4, 5});
 
             // bottom side
-            triangle_mesh.TriangleIndices.Add(4);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(7);
-            triangle_mesh.TriangleIndices.Add(4);
+            list_indices.AddRange(new int[] { 4, 0, 3, 3, 7, 4});
 
             // first square side
-            triangle_mesh.TriangleIndices.Add(1);
-            triangle_mesh.TriangleIndices.Add(2);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(3);
-            triangle_mesh.TriangleIndices.Add(0);
-            triangle_mesh.TriangleIndices.Add(1);
+            list_indices.AddRange(new int[] { 1, 2, 3, 3, 0, 1});
 
             // second square side
-            triangle_mesh.TriangleIndices.Add(6);
-            triangle_mesh.TriangleIndices.Add(5);
-            triangle_mesh.TriangleIndices.Add(4);
-            triangle_mesh.TriangleIndices.Add(4);
-            triangle_mesh.TriangleIndices.Add(7);
-            triangle_mesh.TriangleIndices.Add(6);
+            list_indices.AddRange(new int[] { 6, 5, 4, 4, 7, 6});
 
+            foreach (int indice_id in list_indices)
+                triangle_mesh.TriangleIndices.Add(indice_id);
 
             geometry_model.Geometry = triangle_mesh;
             geometry_model.Material = new DiffuseMaterial(new SolidColorBrush(container_color));

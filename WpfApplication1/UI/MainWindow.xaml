@@ -77,6 +77,7 @@
                     <MenuItem Header="Test1" Click="MenuItem_Click"/>
                     <MenuItem Header="Test_Motor" Click="MenuMotorItem_Click"/>
                     <MenuItem Header="Test 3D Scan" Click="MenuItem_Test3DScan_Click"/>
+                    <MenuItem Header="ResetAllLight" Click="MenuItem_Click_1"/>
                 </MenuItem>
                 <MenuItem Header="_Help" />
             </Menu>
@@ -250,12 +251,12 @@
                                    HorizontalAlignment="Stretch"
                                    Margin="5, 0, 5, 5"
                                    VerticalAlignment="Top"
-                                   Content="Trolley forward" />
+                                   Content="Trolley Forward" />
                                 <Label
                                    HorizontalAlignment="Stretch"
                                    Margin="5, 0, 5, 5"
                                    VerticalAlignment="Top"
-                                   Content="Trolley revert" />
+                                   Content="Trolley Reverse" />
                                 <Label
                                    HorizontalAlignment="Stretch"
                                    Margin="5, 0, 5, 5"

@@ -88,6 +88,7 @@ namespace TIS_3dAntiCollision.Core
         // ANTI-COLLISION
         public const double SLOW_RANGE_SPEED_RATE = 2;
         public const double STOP_RANGE_SPEED_RATE = 1;
+        public const double MINIMUM_SLOW_RANGE_LIMIT = 50;
 
 
     }

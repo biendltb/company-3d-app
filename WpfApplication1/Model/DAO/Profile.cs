@@ -150,8 +150,8 @@ namespace TIS_3dAntiCollision.Model.DAO
 
                         for (int j = 0; j < num_of_col; j++)
                         {
-                            Column current_col = stacks[i].Columns[j];
-                            Column new_col = _p.stacks[i].Columns[j];
+                            Column current_col = new Column(stacks[i].Columns[j]);
+                            Column new_col = new Column(_p.stacks[i].Columns[j]);
                             if (new_col.Score > current_col.Score)
                             {
                                 stacks[i].Columns[j].Quantity = new_col.Quantity;
@@ -171,7 +171,8 @@ namespace TIS_3dAntiCollision.Model.DAO
             if (stacks.Count != 0)
             {
                 // copy columns of the middle stack
-                cols = stacks[1].Columns;
+                foreach (Column c in stacks[1].Columns)
+                    cols.Add(new Column(c));
                 // check left and right stack to find the adjacent bay collision
                 for (int i = 0; i < cols.Count; i++)
                 {
